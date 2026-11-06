@@ -11,6 +11,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+export const siteUrl = 'https://degasconcepts.com'
+
 export const company = {
   name: 'Degas Concepts Limited',
   shortName: 'Degas Concepts',
@@ -23,6 +25,11 @@ export const company = {
   email: 'degasconcept@gmail.com',
   linkedin: 'https://linkedin.com/in/caleb-joshua',
   cacNote: 'CAC-registered company (RC-verified)',
+  // Replace with the real Corporate Affairs Commission registration number.
+  rcNumber: '[RC_NUMBER]',
+  workingHours:
+    'Mon–Fri, 9:00–18:00 WAT (UTC+1), with overlap for UK/EU and morning US hours',
+  paymentOptions: 'Invoicing in USD, GBP, EUR or NGN; bank transfer, Wise or Payoneer',
 }
 
 export const navLinks = [
@@ -37,6 +44,44 @@ export const trustBadges = [
   'CAC Registered',
   '5+ Years Combined Experience',
   '20+ Projects Delivered',
+]
+
+export type TeamMember = {
+  name: string
+  role: string
+  experience: string
+  bio: string
+  linkedin?: string
+  /** Path to a real photo in /public. Omit to show an initials avatar instead. */
+  image?: string
+}
+
+export const team: TeamMember[] = [
+  {
+    name: 'Caleb Joshua',
+    role: 'Lead Developer — UI/UX Designer & Web Experience Developer',
+    experience: '5+ years experience',
+    bio: 'Leads design and web engineering, turning complex requirements into clean, dependable products.',
+    linkedin: company.linkedin,
+    image: '/ceo.jpg',
+  },
+]
+
+export type Client = {
+  name: string
+  /** Logo in /public/clients (SVG or transparent PNG). Omit to show the name as a wordmark. */
+  logo?: string
+}
+
+// Replace these placeholders with real clients, e.g.
+// { name: 'Acme Bank', logo: '/clients/acme-bank.svg' }
+export const clients: Client[] = [
+  { name: '[CLIENT_NAME_1]' },
+  { name: '[CLIENT_NAME_2]' },
+  { name: '[CLIENT_NAME_3]' },
+  { name: '[CLIENT_NAME_4]' },
+  { name: '[CLIENT_NAME_5]' },
+  { name: '[CLIENT_NAME_6]' },
 ]
 
 export type Service = {

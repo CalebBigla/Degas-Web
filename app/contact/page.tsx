@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Phone, Mail, MessageCircle, ShieldCheck, MapPin } from 'lucide-react'
+import { Phone, Mail, MessageCircle, ShieldCheck, MapPin, Clock, Wallet } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { ContactForm } from '@/components/contact-form'
 import { company } from '@/lib/site-data'
@@ -107,6 +107,26 @@ export default function ContactPage() {
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   Nigeria — serving clients remotely worldwide. A physical office address
                   can be added here as we grow.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
+              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">Working hours</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {company.workingHours}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
+              <Wallet className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-semibold text-foreground">Payment options</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {company.paymentOptions}
                 </p>
               </div>
             </div>

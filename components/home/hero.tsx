@@ -1,8 +1,9 @@
 import { ArrowRight, ShieldCheck, Award, FolderCheck } from 'lucide-react'
 import { ButtonLink } from '@/components/button-link'
+import { company } from '@/lib/site-data'
 
 const badges = [
-  { icon: ShieldCheck, label: 'CAC Registered' },
+  { icon: ShieldCheck, label: `Registered company (CAC RC ${company.rcNumber})` },
   { icon: Award, label: '5+ Years Combined Experience' },
   { icon: FolderCheck, label: '20+ Projects Delivered' },
 ]
@@ -22,22 +23,22 @@ export function Hero() {
         }}
       />
       <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-6 lg:pb-24 lg:pt-28">
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3.5 py-1.5 text-xs font-medium text-muted-foreground">
+        <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-border bg-secondary px-3.5 py-1.5 text-xs font-medium text-muted-foreground motion-reduce:animate-none">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
           Simplicity and Excellence
         </span>
 
-        <h1 className="mt-6 text-balance text-4xl font-bold leading-[1.05] text-foreground sm:text-5xl lg:text-6xl">
+        <h1 className="mt-6 animate-fade-up text-balance text-4xl font-bold leading-[1.05] text-foreground [animation-delay:100ms] motion-reduce:animate-none sm:text-5xl lg:text-6xl">
           We simplify solutions across the tech space
         </h1>
 
-        <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-6 max-w-2xl animate-fade-up text-pretty text-lg leading-relaxed text-muted-foreground [animation-delay:200ms] motion-reduce:animate-none">
           Degas Concepts Limited is a trusted provider of tech solutions. From design
           to deployment, we build reliable products with clarity, integrity, and
           excellence at every step.
         </p>
 
-        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-9 flex animate-fade-up flex-col gap-3 [animation-delay:300ms] motion-reduce:animate-none sm:flex-row">
           <ButtonLink href="/contact" variant="primary">
             Get a Quote
             <ArrowRight className="h-4 w-4" />

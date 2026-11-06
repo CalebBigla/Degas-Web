@@ -3,6 +3,7 @@ import { Check } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { CtaBanner } from '@/components/cta-banner'
 import { services } from '@/lib/site-data'
+import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -22,7 +23,7 @@ export default function ServicesPage() {
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto flex max-w-6xl flex-col gap-6">
           {services.map(({ slug, title, description, included, icon: Icon }, index) => (
-            <div
+            <Reveal
               key={slug}
               id={slug}
               className="grid scroll-mt-24 gap-8 rounded-2xl border border-border bg-card p-8 lg:grid-cols-12 lg:p-10"
@@ -57,7 +58,7 @@ export default function ServicesPage() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>

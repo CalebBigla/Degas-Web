@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { ProjectCard } from '@/components/project-card'
 import { projects } from '@/lib/site-data'
+import { Reveal } from '@/components/reveal'
 
 export function FeaturedWork() {
   const featured = [
@@ -30,8 +31,10 @@ export function FeaturedWork() {
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {featured.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+          {featured.map((project, index) => (
+            <Reveal key={project.slug} delay={index * 80} className="grid">
+              <ProjectCard project={project} />
+            </Reveal>
           ))}
         </div>
       </div>

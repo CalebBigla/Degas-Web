@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { services } from '@/lib/site-data'
+import { Reveal } from '@/components/reveal'
 
 export function ServicesOverview() {
   return (
@@ -14,12 +15,13 @@ export function ServicesOverview() {
         />
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {services.map(({ slug, title, summary, icon: Icon }) => (
+          {services.map(({ slug, title, summary, icon: Icon }, index) => (
             <Link
               key={slug}
               href="/services"
-              className="group flex flex-col gap-4 bg-card p-7 transition-colors hover:bg-secondary"
+              className="group flex flex-col bg-card p-7 transition-colors hover:bg-secondary"
             >
+              <Reveal delay={index * 80} className="flex flex-col gap-4">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-navy text-navy-foreground">
                 <Icon className="h-5 w-5" />
               </span>
@@ -28,6 +30,7 @@ export function ServicesOverview() {
                 <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground transition-colors group-hover:text-accent" />
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground">{summary}</p>
+              </Reveal>
             </Link>
           ))}
         </div>

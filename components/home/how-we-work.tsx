@@ -1,5 +1,6 @@
 import { SectionHeading } from '@/components/section-heading'
 import { processSteps } from '@/lib/site-data'
+import { Reveal } from '@/components/reveal'
 
 export function HowWeWork() {
   return (
@@ -12,9 +13,11 @@ export function HowWeWork() {
         />
 
         <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {processSteps.map(({ step, title, description }) => (
-            <li
+          {processSteps.map(({ step, title, description }, index) => (
+            <Reveal
+              as="li"
               key={step}
+              delay={index * 80}
               className="relative flex flex-col gap-3 rounded-xl border border-border bg-card p-7"
             >
               <span className="font-heading text-4xl font-bold text-accent/25">
@@ -24,7 +27,7 @@ export function HowWeWork() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {description}
               </p>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </div>

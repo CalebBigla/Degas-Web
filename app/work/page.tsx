@@ -3,6 +3,7 @@ import { PageHero } from '@/components/page-hero'
 import { ProjectCard } from '@/components/project-card'
 import { CtaBanner } from '@/components/cta-banner'
 import { projects } from '@/lib/site-data'
+import { Reveal } from '@/components/reveal'
 
 export const metadata: Metadata = {
   title: 'Work',
@@ -22,8 +23,10 @@ export default function WorkPage() {
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+            {projects.map((project, index) => (
+              <Reveal key={project.slug} delay={index * 80} className="grid">
+                <ProjectCard project={project} />
+              </Reveal>
             ))}
           </div>
         </div>

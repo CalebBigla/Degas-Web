@@ -80,10 +80,23 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-navy-muted sm:flex-row sm:items-center">
-          <p>
-            &copy; {year} {company.name}. All rights reserved.
-          </p>
-          <p>Simplicity and Excellence.</p>
+          <div className="flex flex-col gap-1">
+            <p>
+              &copy; {year} {company.name}. All rights reserved.
+            </p>
+            <p>
+              Registered with Nigeria&apos;s Corporate Affairs Commission, RC {company.rcNumber}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link href="/privacy" className="transition-colors hover:text-navy-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="transition-colors hover:text-navy-foreground">
+              Terms of Use
+            </Link>
+            <p>Simplicity and Excellence.</p>
+          </div>
         </div>
       </div>
     </footer>

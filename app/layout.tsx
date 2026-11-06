@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { siteUrl } from '@/lib/site-data'
 import './globals.css'
 
 const inter = Inter({
@@ -18,7 +19,7 @@ const manrope = Manrope({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://degasconcepts.com'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Degas Concepts Limited — Simplicity and Excellence',
     template: '%s — Degas Concepts Limited',
@@ -34,6 +35,8 @@ export const metadata: Metadata = {
     'WordPress development',
     'product design',
     'Nigeria software company',
+    'remote development team',
+    'offshore software development',
   ],
   generator: 'v0.app',
   openGraph: {
@@ -42,6 +45,9 @@ export const metadata: Metadata = {
       'A CAC-registered tech solutions company simplifying solutions across the tech space.',
     siteName: 'Degas Concepts Limited',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
   icons: {
     icon: [
@@ -66,6 +72,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable} bg-background`}>
       <body className="font-sans antialiased">
+        <noscript>
+          <style>{`[data-reveal='hidden']{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />

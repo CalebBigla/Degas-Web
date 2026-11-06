@@ -4,7 +4,7 @@ import { Eye, Target, ExternalLink, ArrowUpRight } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { SectionHeading } from '@/components/section-heading'
 import { CtaBanner } from '@/components/cta-banner'
-import { coreValues, company } from '@/lib/site-data'
+import { coreValues, company, team } from '@/lib/site-data'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -12,15 +12,15 @@ export const metadata: Metadata = {
     'Degas Concepts Limited is a CAC-registered tech solutions company built on transparency, integrity, and reliability — simplifying solutions across the tech space.',
 }
 
-const team = [
-  {
-    name: 'Caleb Joshua',
-    role: 'Lead Developer — UI/UX Designer & Web Experience Developer',
-    experience: '5+ years experience',
-    bio: 'Leads design and web engineering, turning complex requirements into clean, dependable products.',
-    linkedin: company.linkedin,
-  },
-]
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]!.toUpperCase())
+    .join('')
+}
 
 export default function AboutPage() {
   return (
@@ -124,12 +124,23 @@ export default function AboutPage() {
                 className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8"
               >
                 <div className="relative h-14 w-14 overflow-hidden rounded-full">
-                  <Image
-                    src="/ceo.jpg"
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                  />
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span
+                      className="flex h-full w-full items-center justify-center bg-navy font-heading text-base font-bold text-white"
+                      role="img"
+                      aria-label={member.name}
+                    >
+                      {initials(member.name)}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-foreground">{member.name}</h3>

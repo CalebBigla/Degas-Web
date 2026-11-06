@@ -4,7 +4,7 @@ import type { Project } from '@/lib/site-data'
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg">
+    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-[translate,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent has-[a:focus-visible]:ring-offset-2">
       <div className="relative aspect-[16/10] overflow-hidden bg-navy">
         <div
           className="absolute inset-0 opacity-30"
@@ -26,12 +26,14 @@ export function ProjectCard({ project }: { project: Project }) {
         <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
           {project.description}
         </p>
+        {/* The ::after overlay stretches this link over the whole card: one focusable element. */}
         <Link
           href={`/work/${project.slug}`}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-opacity hover:opacity-80"
+          aria-label={`View case study: ${project.title}`}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-opacity after:absolute after:inset-0 after:content-[''] focus-visible:outline-none group-hover:opacity-80"
         >
           View Case Study
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
       </div>
     </article>
