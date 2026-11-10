@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, Trash2, Upload } from 'lucide-react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { MEDIA_BUCKET } from '@/lib/supabase/config'
 import { cn } from '@/lib/utils'
+import { trimImage } from '@/lib/admin/trim-image'
 import { buttonClass } from '@/components/admin/ui'
 
 const MAX_BYTES = 5 * 1024 * 1024
@@ -24,6 +25,7 @@ export function ImageField({
   folder,
   aspect = 'video',
   contain,
+  trim,
 }: {
   name: string
   label: string
@@ -35,6 +37,8 @@ export function ImageField({
   aspect?: 'video' | 'square' | 'wide'
   /** Fit the whole image (logos) instead of cropping (photos). */
   contain?: boolean
+  /** Crop empty borders before uploading (logos). */
+  trim?: boolean
 }) {
   const inputId = useId()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -42,7 +46,8 @@ export function ImageField({
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
 
-  async function handleFile(file: File) {
+  async function handleFile(original: File) {
+    let file = original
     setUploadError(null)
     if (!ACCEPTED.includes(file.type)) {
       setUploadError('Use a PNG, JPG, WebP, AVIF or SVG image.')
@@ -55,6 +60,7 @@ export function ImageField({
 
     setUploading(true)
     try {
+      if (trim) file = await trimImage(file)
       const extension = file.name.split('.').pop()?.toLowerCase() || 'png'
       const path = `${folder}/${crypto.randomUUID()}.${extension}`
       const supabase = getSupabaseBrowserClient()

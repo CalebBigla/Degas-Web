@@ -36,9 +36,10 @@ export function ClientForm({ client }: { client?: Client }) {
                 folder="clients"
                 aspect="wide"
                 contain
+                trim
                 defaultValue={client?.logo}
                 error={e.logo_url}
-                help="SVG or transparent PNG, ideally a single colour. Shown greyscale until hovered."
+                help="SVG or PNG, ideally a single colour. Empty space around the logo is trimmed automatically. Shown greyscale until hovered."
               />
             </div>
           </Card>

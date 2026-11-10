@@ -9,15 +9,17 @@ function ClientLogo({ client }: { client: Client }) {
       <Image
         src={client.logo}
         alt={client.name}
-        width={140}
-        height={40}
-        className="h-8 w-auto object-contain opacity-60 grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0"
+        width={200}
+        height={64}
+        sizes="200px"
+        // multiply: white logo backgrounds disappear into the page.
+        className="h-12 w-auto max-w-[180px] object-contain opacity-70 mix-blend-multiply grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0 sm:h-14 sm:max-w-[200px]"
       />
     )
   }
   // Wordmark fallback for clients without a logo file yet.
   return (
-    <span className="whitespace-nowrap font-heading text-lg font-bold tracking-tight text-muted-foreground/70 transition-colors duration-300 hover:text-foreground">
+    <span className="whitespace-nowrap font-heading text-xl font-bold tracking-tight text-muted-foreground/70 sm:text-2xl transition-colors duration-300 hover:text-foreground">
       {client.name}
     </span>
   )
@@ -29,7 +31,7 @@ function LogoGroup({ clients, duplicate = false }: { clients: Client[]; duplicat
       aria-hidden={duplicate || undefined}
       aria-label={duplicate ? undefined : 'Clients'}
       className={cn(
-        'flex shrink-0 items-center gap-14 pr-14',
+        'flex shrink-0 items-center gap-16 pr-16',
         // Reduced motion: a single static, centred, wrapping row.
         duplicate
           ? 'motion-reduce:hidden'
@@ -37,7 +39,7 @@ function LogoGroup({ clients, duplicate = false }: { clients: Client[]; duplicat
       )}
     >
       {clients.map((client) => (
-        <li key={client.id} className="flex h-10 items-center">
+        <li key={client.id} className="flex h-14 items-center sm:h-16">
           <ClientLogo client={client} />
         </li>
       ))}
