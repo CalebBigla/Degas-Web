@@ -1,7 +1,7 @@
 -- =============================================================================
 -- Degas Concepts CMS - initial content
 -- Run once, after schema.sql. Copies the content the site launched with.
--- It only inserts into empty tables, so re-running it will not duplicate rows.
+-- It only fills tables that are empty, so re-running it will not duplicate rows.
 -- Clients are intentionally left empty: add real clients in /admin/clients.
 -- Note: phrases like 'in' || 'to ...' are split on purpose. The Supabase SQL
 -- editor mistakes that word inside text for a table name.
