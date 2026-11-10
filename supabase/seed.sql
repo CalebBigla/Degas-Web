@@ -4,7 +4,7 @@
 -- It only inserts into empty tables, so re-running it will not duplicate rows.
 -- Clients are intentionally left empty: add real clients in /admin/clients.
 -- Note: phrases like 'in' || 'to ...' are split on purpose. The Supabase SQL
--- editor mistakes the word "into" inside text for a table name.
+-- editor mistakes that word inside text for a table name.
 -- =============================================================================
 
 insert into public.site_settings (
