@@ -222,3 +222,6 @@ create policy "Admins update media" on storage.objects
 drop policy if exists "Admins delete media" on storage.objects;
 create policy "Admins delete media" on storage.objects
   for delete to authenticated using (bucket_id = 'media' and public.is_admin());
+
+-- Make the new tables and rows visible to the API immediately.
+notify pgrst, 'reload schema';

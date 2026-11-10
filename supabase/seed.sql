@@ -90,3 +90,6 @@ select * from (values
    'https://linkedin.com/in/caleb-joshua', '/ceo.jpg', 1)
 ) as v(name, role, experience, bio, linkedin, image_url, sort_order)
 where not exists (select 1 from public.team_members);
+
+-- Make the new tables and rows visible to the API immediately.
+notify pgrst, 'reload schema';
