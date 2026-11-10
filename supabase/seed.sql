@@ -3,6 +3,8 @@
 -- Run once, after schema.sql. Copies the content the site launched with.
 -- It only inserts into empty tables, so re-running it will not duplicate rows.
 -- Clients are intentionally left empty: add real clients in /admin/clients.
+-- Note: phrases like 'in' || 'to ...' are split on purpose. The Supabase SQL
+-- editor mistakes the word "into" inside text for a table name.
 -- =============================================================================
 
 insert into public.site_settings (
@@ -30,7 +32,7 @@ insert into public.services (slug, title, icon, summary, description, included, 
 select * from (values
   ('ui-ux-design', 'UI/UX Design', 'PenTool',
    'Intuitive interfaces designed around real user behaviour.',
-   E'We research, wireframe, and design interfaces that are clear, accessible, and easy to use \u2014 turning complex flows into simple experiences.',
+   E'We research, wireframe, and design interfaces that are clear, accessible, and easy to use \u2014 turning complex flows in' || 'to simple experiences.',
    array['User research & journey mapping', 'Wireframes & interactive prototypes', 'Design systems & component libraries', 'Usability testing & iteration'], 1),
   ('web-development', 'Web Design & Development', 'Code2',
    'Fast, secure, and scalable websites and web applications.',
@@ -49,7 +51,7 @@ select * from (values
    'We build cross-platform and native mobile applications that feel fast, reliable, and consistent across devices.',
    array['iOS & Android development', 'Cross-platform builds', 'Push notifications & offline support', 'App store deployment support'], 5),
   ('landing-pages', 'Landing Pages', 'MousePointerClick',
-   'Conversion-focused pages that turn visitors into customers.',
+   'Conversion-focused pages that turn visitors in' || 'to customers.',
    E'High-impact landing pages built for launches and campaigns \u2014 designed to communicate clearly and convert effectively.',
    array['Conversion-focused copy structure', 'Responsive, fast-loading builds', 'Analytics & tracking setup', 'A/B test-ready layouts'], 6)
 ) as v(slug, title, icon, summary, description, included, sort_order)
@@ -86,7 +88,7 @@ where not exists (select 1 from public.projects);
 insert into public.team_members (name, role, experience, bio, linkedin, image_url, sort_order)
 select * from (values
   ('Caleb Joshua', E'Lead Developer \u2014 UI/UX Designer & Web Experience Developer', '5+ years experience',
-   'Leads design and web engineering, turning complex requirements into clean, dependable products.',
+   'Leads design and web engineering, turning complex requirements in' || 'to clean, dependable products.',
    'https://linkedin.com/in/caleb-joshua', '/ceo.jpg', 1)
 ) as v(name, role, experience, bio, linkedin, image_url, sort_order)
 where not exists (select 1 from public.team_members);
