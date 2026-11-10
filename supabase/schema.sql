@@ -1,13 +1,13 @@
 -- =============================================================================
--- Degas Concepts CMS — database schema
--- Run once in the Supabase SQL editor (Dashboard → SQL Editor → New query).
+-- Degas Concepts CMS - database schema
+-- Run once in the Supabase SQL editor (Dashboard -> SQL Editor -> New query).
 -- Safe to re-run: every statement is idempotent.
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
 -- Admin allow-list
 -- Only users listed here can sign in to /admin or change content.
--- Add an admin (after creating the user under Authentication → Users):
+-- Add an admin (after creating the user under Authentication -> Users):
 --   insert into public.admins (user_id)
 --   select id from auth.users where email = 'you@example.com';
 -- -----------------------------------------------------------------------------
@@ -124,7 +124,7 @@ create table if not exists public.team_members (
   updated_at timestamptz not null default now()
 );
 
--- Page copy: one row per public page (home, about, …, site). `content` holds
+-- Page copy: one row per public page (home, about, ..., site). `content` holds
 -- the edited text keyed by field; anything missing falls back to the defaults
 -- in lib/pages/definitions.ts.
 create table if not exists public.pages (
