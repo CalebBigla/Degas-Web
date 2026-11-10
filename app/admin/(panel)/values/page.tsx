@@ -18,7 +18,7 @@ export default async function ValuesPage() {
         action={{ label: 'New value', href: '/admin/values/new' }}
       />
       {values.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
           <EmptyState
             title="No core values yet"
             description="Add the principles that guide your work."

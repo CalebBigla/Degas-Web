@@ -25,7 +25,7 @@ export default async function ServicesPage() {
         action={{ label: 'New service', href: '/admin/services/new' }}
       />
       {services.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
           <EmptyState
             title="No services yet"
             description="Add the services you offer."

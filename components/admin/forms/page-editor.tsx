@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils'
 import { buttonClass, Card } from '@/components/admin/ui'
 import { Field, inputClass } from '@/components/admin/fields'
 import { FormAlert, SubmitButton } from '@/components/admin/form-controls'
+import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 
 /** Editor state: list fields are edited as newline-joined text. */
 type EditorValue = string | boolean | GroupItem[]
@@ -113,6 +114,7 @@ function GroupEditor({
 }) {
   const max = field.maxItems ?? 50
   const min = field.minItems ?? 0
+  const [removing, setRemoving] = useState<number | null>(null)
   const blank = () => Object.fromEntries(field.fields.map((sub) => [sub.key, '']))
 
   const update = (index: number, key: string, value: string) =>
@@ -136,7 +138,7 @@ function GroupEditor({
 
       <ol className="flex flex-col gap-3">
         {items.map((item, index) => (
-          <li key={index} className="rounded-lg border border-border bg-secondary/40">
+          <li key={index} className="animate-page-in rounded-xl border border-border bg-secondary/40 transition-[border-color,box-shadow] duration-200 focus-within:border-accent/40 focus-within:shadow-[0_0_0_4px_color-mix(in_oklch,var(--accent)_10%,transparent)]">
             <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-2">
               <span className="truncate text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {field.itemLabel} {index + 1}
@@ -167,10 +169,7 @@ function GroupEditor({
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (window.confirm(`Remove ${field.itemLabel.toLowerCase()} ${index + 1}?`))
-                      onChange(items.filter((_, i) => i !== index))
-                  }}
+                  onClick={() => setRemoving(index)}
                   disabled={items.length <= min}
                   className="rounded p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-30"
                   aria-label={`Remove ${field.itemLabel.toLowerCase()} ${index + 1}`}
@@ -197,6 +196,15 @@ function GroupEditor({
           </li>
         ))}
       </ol>
+
+      <ConfirmDialog
+        open={removing !== null}
+        title={`Remove ${field.itemLabel.toLowerCase()} ${(removing ?? 0) + 1}?`}
+        description="It disappears from the page when you save."
+        confirmLabel="Remove"
+        onConfirm={() => onChange(items.filter((_, i) => i !== removing))}
+        onClose={() => setRemoving(null)}
+      />
 
       {items.length < max && (
         <button
@@ -364,7 +372,7 @@ export function PageEditor({
         ))}
       </div>
 
-      <aside className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
+      <aside className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
         <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
           <SubmitButton className="w-full">Save changes</SubmitButton>
           <p className="mt-2 text-center text-xs text-muted-foreground">

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Inbox, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function PageHeader({
@@ -15,25 +15,26 @@ export function PageHeader({
 }) {
   return (
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div>
+      <div className="min-w-0">
         {back && (
           <Link
             href={back.href}
-            className="mb-2 inline-flex text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="group mb-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            ← {back.label}
+            <span className="transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
+            {back.label}
           </Link>
         )}
-        <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+        <h1 className="text-[1.65rem] font-semibold leading-tight text-foreground">{title}</h1>
         {description && (
-          <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             {description}
           </p>
         )}
       </div>
       {action && (
-        <Link href={action.href} className={buttonClass('primary')}>
-          <Plus className="h-4 w-4" />
+        <Link href={action.href} className={cn(buttonClass('primary'), 'group shrink-0')}>
+          <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
           {action.label}
         </Link>
       )}
@@ -43,12 +44,14 @@ export function PageHeader({
 
 export function buttonClass(variant: 'primary' | 'secondary' | 'ghost' | 'danger' = 'secondary') {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-[background-color,opacity,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60',
-    variant === 'primary' && 'bg-accent text-accent-foreground shadow-sm hover:opacity-90',
+    'inline-flex h-9 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-[background-color,box-shadow,transform,filter,border-color] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60',
+    variant === 'primary' &&
+      'bg-accent text-accent-foreground shadow-[0_1px_2px_rgb(0_0_0/0.12),inset_0_1px_0_rgb(255_255_255/0.18)] hover:-translate-y-px hover:shadow-[0_6px_16px_-4px_color-mix(in_oklch,var(--accent)_55%,transparent)] hover:brightness-105',
     variant === 'secondary' &&
-      'border border-border bg-card text-foreground shadow-sm hover:bg-secondary',
+      'border border-border bg-card text-foreground shadow-sm hover:border-foreground/20 hover:bg-secondary',
     variant === 'ghost' && 'text-muted-foreground hover:bg-secondary hover:text-foreground',
-    variant === 'danger' && 'bg-destructive text-white shadow-sm hover:opacity-90',
+    variant === 'danger' &&
+      'bg-destructive text-white shadow-sm hover:-translate-y-px hover:shadow-[0_6px_16px_-4px_color-mix(in_oklch,var(--destructive)_55%,transparent)]',
   )
 }
 
@@ -64,11 +67,16 @@ export function Card({
   className?: string
 }) {
   return (
-    <section className={cn('rounded-xl border border-border bg-card shadow-sm', className)}>
+    <section
+      className={cn(
+        'rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-[border-color,box-shadow] duration-300',
+        className,
+      )}
+    >
       {title && (
         <header className="border-b border-border px-6 py-4">
-          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
+          <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>
+          {description && <p className="mt-0.5 text-[13px] leading-relaxed text-muted-foreground">{description}</p>}
         </header>
       )}
       <div className="p-6">{children}</div>
@@ -86,11 +94,12 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium',
-        tone === 'neutral' && 'bg-secondary text-muted-foreground',
-        tone === 'success' && 'bg-accent/10 text-accent',
-        tone === 'accent' && 'bg-navy text-navy-foreground',
-        tone === 'warning' && 'bg-amber-100 text-amber-800',
+        'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium',
+        tone === 'neutral' && 'border-border bg-secondary text-muted-foreground',
+        tone === 'success' && 'border-accent/20 bg-accent/10 text-accent',
+        tone === 'accent' && 'border-transparent bg-navy text-navy-foreground',
+        tone === 'warning' &&
+          'border-amber-300/50 bg-amber-100 text-amber-800 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-300',
       )}
     >
       {children}
@@ -101,7 +110,10 @@ export function Badge({
 export function StatusBadge({ published }: { published: boolean }) {
   return published ? (
     <Badge tone="success">
-      <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+      <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-50 motion-reduce:hidden" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+      </span>
       Published
     </Badge>
   ) : (
@@ -123,11 +135,17 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center px-6 py-16 text-center">
+      <div className="relative mb-5">
+        <span className="absolute inset-0 -m-3 rounded-full bg-accent/10 blur-xl" aria-hidden="true" />
+        <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card text-muted-foreground shadow-sm">
+          <Inbox className="h-6 w-6" />
+        </span>
+      </div>
       <p className="text-base font-semibold text-foreground">{title}</p>
       <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
       {action && (
-        <Link href={action.href} className={cn(buttonClass('primary'), 'mt-6')}>
-          <Plus className="h-4 w-4" />
+        <Link href={action.href} className={cn(buttonClass('primary'), 'group mt-6')}>
+          <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
           {action.label}
         </Link>
       )}
@@ -144,17 +162,17 @@ export function DataTable({
   children: React.ReactNode
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-border bg-secondary/60">
+          <thead className="border-b border-border bg-secondary/50">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.label}
                   scope="col"
                   className={cn(
-                    'px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground',
+                    'px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground',
                     col.hideOnMobile && 'hidden md:table-cell',
                     col.className,
                   )}
@@ -164,7 +182,9 @@ export function DataTable({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">{children}</tbody>
+          <tbody className="admin-stagger divide-y divide-border [&>tr]:transition-colors [&>tr:hover]:bg-secondary/50">
+            {children}
+          </tbody>
         </table>
       </div>
     </div>
@@ -181,7 +201,7 @@ export function Td({
   hideOnMobile?: boolean
 }) {
   return (
-    <td className={cn('px-4 py-3 align-middle', hideOnMobile && 'hidden md:table-cell', className)}>
+    <td className={cn('px-4 py-3.5 align-middle', hideOnMobile && 'hidden md:table-cell', className)}>
       {children}
     </td>
   )
@@ -209,7 +229,7 @@ export function Thumb({
   contain?: boolean
 }) {
   return (
-    <span className="relative flex h-10 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-secondary">
+    <span className="relative flex h-10 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-secondary transition-transform duration-300 group-hover:scale-105">
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

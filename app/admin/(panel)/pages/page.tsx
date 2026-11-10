@@ -17,7 +17,7 @@ export default async function PagesPage() {
         description="Edit the text of every page on the site: headings, introductions, buttons, process steps, legal pages, navigation and footer."
       />
 
-      <ul className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <ul className="admin-stagger overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
         {PAGE_SLUGS.map((slug, index) => {
           const page = pageDefinitions[slug]
           const updated = saved[slug]
@@ -26,9 +26,9 @@ export default async function PagesPage() {
             <li key={slug} className={index > 0 ? 'border-t border-border' : undefined}>
               <Link
                 href={`/admin/pages/${slug}`}
-                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-secondary/60"
+                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-secondary/50"
               >
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-secondary/60 text-muted-foreground transition-[transform,color,background-color] duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-accent/10 group-hover:text-accent">
                   <Icon className="h-5 w-5" />
                 </span>
                 <span className="min-w-0 flex-1">

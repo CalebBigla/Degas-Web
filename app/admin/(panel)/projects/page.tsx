@@ -27,7 +27,7 @@ export default async function ProjectsPage() {
         action={{ label: 'New project', href: '/admin/projects/new' }}
       />
       {projects.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
           <EmptyState
             title="No projects yet"
             description="Add your first case study to show it on the Work page."

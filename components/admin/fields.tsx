@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 
 export const inputClass =
-  'w-full rounded-md border border-border bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-accent focus:ring-2 focus:ring-accent/30 aria-invalid:border-destructive aria-invalid:focus:ring-destructive/20'
+  'w-full rounded-lg border border-input bg-card px-3.5 py-2.5 text-sm text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.04)] outline-none transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-muted-foreground/60 hover:border-foreground/25 focus:border-accent focus:shadow-[0_0_0_4px_color-mix(in_oklch,var(--accent)_18%,transparent)] aria-invalid:border-destructive aria-invalid:focus:shadow-[0_0_0_4px_color-mix(in_oklch,var(--destructive)_15%,transparent)]'
 
 export function Field({
   name,
@@ -26,7 +26,7 @@ export function Field({
       </label>
       {children}
       {error ? (
-        <p id={`${name}-error`} className="text-xs text-destructive">
+        <p id={`${name}-error`} className="animate-page-in text-xs font-medium text-destructive">
           {error}
         </p>
       ) : (
@@ -142,11 +142,11 @@ export function ToggleField({
         />
         <span
           aria-hidden="true"
-          className="h-6 w-11 rounded-full bg-border transition-colors peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2"
+          className="h-6 w-11 rounded-full bg-input transition-colors duration-300 peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
         />
         <span
           aria-hidden="true"
-          className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"
+          className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-md transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-checked:translate-x-5 peer-active:w-6 peer-checked:peer-active:translate-x-4"
         />
       </span>
     </label>

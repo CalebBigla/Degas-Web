@@ -3,8 +3,8 @@ import { Database } from 'lucide-react'
 /** Shown in place of the admin until Supabase environment variables are set. */
 export function SetupRequired() {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-secondary/50 px-4 py-12">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-8 shadow-sm">
+    <div className="flex min-h-dvh items-center justify-center px-4 py-12">
+      <div className="w-full max-w-lg animate-rise rounded-2xl border border-border bg-card p-8 shadow-sm">
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-navy text-navy-foreground">
           <Database className="h-5 w-5" />
         </span>

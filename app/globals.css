@@ -175,3 +175,162 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* =============================================================================
+   Admin dashboard theme (scoped to .admin-root; the public site is unaffected)
+   ============================================================================= */
+@theme {
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  --animate-page-in: page-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-rise: rise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-toast-in: toast-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-drain: drain linear forwards;
+  --animate-overlay-in: overlay-in 200ms ease-out both;
+  --animate-dialog-in: dialog-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-drawer-in: drawer-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes drain {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes dialog-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes drawer-in {
+    from { transform: translateX(-100%); }
+    to { transform: none; }
+  }
+}
+
+.admin-root {
+  --background: oklch(0.982 0.003 258);
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --secondary: oklch(0.962 0.006 258);
+  --muted: oklch(0.962 0.006 258);
+  --border: oklch(0.912 0.008 258);
+  --input: oklch(0.89 0.01 258);
+  --shimmer: oklch(0.93 0.008 258);
+  --shimmer-highlight: oklch(0.97 0.004 258);
+  color-scheme: light;
+  font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.006em;
+}
+
+.admin-root.dark {
+  --background: oklch(0.165 0.018 262);
+  --foreground: oklch(0.95 0.006 258);
+  --card: oklch(0.205 0.022 262);
+  --card-foreground: oklch(0.95 0.006 258);
+  --popover: oklch(0.225 0.024 262);
+  --popover-foreground: oklch(0.95 0.006 258);
+  --primary: oklch(0.95 0.006 258);
+  --primary-foreground: oklch(0.2 0.03 262);
+  --secondary: oklch(0.255 0.024 262);
+  --secondary-foreground: oklch(0.95 0.006 258);
+  --muted: oklch(0.255 0.024 262);
+  --muted-foreground: oklch(0.71 0.022 258);
+  --accent: oklch(0.72 0.14 163);
+  --accent-foreground: oklch(0.18 0.03 170);
+  --destructive: oklch(0.68 0.2 25);
+  --border: oklch(0.295 0.024 262);
+  --input: oklch(0.34 0.026 262);
+  --ring: oklch(0.72 0.14 163);
+  --navy: oklch(0.34 0.06 262);
+  --navy-foreground: oklch(0.97 0 0);
+  --shimmer: oklch(0.25 0.022 262);
+  --shimmer-highlight: oklch(0.3 0.024 262);
+  color-scheme: dark;
+}
+
+/* Page background behind the admin (also covers overscroll). */
+html:has(.admin-root) {
+  background: oklch(0.982 0.003 258);
+}
+html:has(.admin-root.dark) {
+  background: oklch(0.165 0.018 262);
+  color-scheme: dark;
+}
+
+.admin-root h1,
+.admin-root h2,
+.admin-root h3,
+.admin-root h4,
+.admin-root h5,
+.admin-root .font-heading {
+  font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+/* Logo: white in dark mode. */
+.admin-root.dark .admin-logo {
+  filter: brightness(0) invert(1);
+}
+
+/* Smooth theme switch: colours ease, layout does not. */
+.admin-root.theme-transition,
+.admin-root.theme-transition * {
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    color 250ms ease,
+    fill 250ms ease !important;
+}
+
+.admin-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--shimmer) 0%,
+    var(--shimmer-highlight) 50%,
+    var(--shimmer) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Staggered entrance for the children of .admin-stagger (first 12 cascade). */
+.admin-stagger > * {
+  animation: var(--animate-rise);
+}
+.admin-stagger > :nth-child(2) { animation-delay: 45ms; }
+.admin-stagger > :nth-child(3) { animation-delay: 90ms; }
+.admin-stagger > :nth-child(4) { animation-delay: 135ms; }
+.admin-stagger > :nth-child(5) { animation-delay: 180ms; }
+.admin-stagger > :nth-child(6) { animation-delay: 225ms; }
+.admin-stagger > :nth-child(7) { animation-delay: 270ms; }
+.admin-stagger > :nth-child(8) { animation-delay: 315ms; }
+.admin-stagger > :nth-child(9) { animation-delay: 360ms; }
+.admin-stagger > :nth-child(10) { animation-delay: 405ms; }
+.admin-stagger > :nth-child(11) { animation-delay: 450ms; }
+.admin-stagger > :nth-child(12) { animation-delay: 495ms; }
+.admin-stagger > :nth-child(n + 13) { animation-delay: 540ms; }
+
+.admin-root ::selection {
+  background: color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.admin-root dialog::backdrop {
+  background: color-mix(in oklch, oklch(0.15 0.03 262) 55%, transparent);
+  backdrop-filter: blur(3px);
+  animation: var(--animate-overlay-in);
+}

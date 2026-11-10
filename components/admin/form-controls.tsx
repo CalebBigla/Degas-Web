@@ -38,7 +38,7 @@ export function FormAlert({ state }: { state: FormState }) {
   return (
     <div
       role="alert"
-      className="mb-6 flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+      className="mb-6 flex animate-page-in items-start gap-2.5 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
     >
       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
       <span>{state.message}</span>

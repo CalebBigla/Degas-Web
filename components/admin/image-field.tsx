@@ -137,7 +137,7 @@ export function ImageField({
           type="button"
           onClick={() => fileInput.current?.click()}
           disabled={uploading}
-          className={cn(buttonClass('secondary'), 'px-3 py-1.5 text-xs')}
+          className={cn(buttonClass('secondary'), 'h-8 px-3 text-xs')}
         >
           <Upload className="h-3.5 w-3.5" />
           {url ? 'Replace' : 'Upload'}
@@ -147,7 +147,7 @@ export function ImageField({
             type="button"
             onClick={() => setUrl('')}
             disabled={uploading}
-            className={cn(buttonClass('ghost'), 'px-3 py-1.5 text-xs')}
+            className={cn(buttonClass('ghost'), 'h-8 px-3 text-xs')}
           >
             <Trash2 className="h-3.5 w-3.5" />
             Remove

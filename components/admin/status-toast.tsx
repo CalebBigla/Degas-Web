@@ -35,27 +35,42 @@ export function StatusToast() {
   return (
     <div
       role="status"
+      key={visible}
       className={cn(
-        'fixed bottom-6 right-6 z-50 flex max-w-sm animate-pop-in items-start gap-3 rounded-lg border p-4 text-sm shadow-lg motion-reduce:animate-none',
-        message.error
-          ? 'border-destructive/30 bg-card text-destructive'
-          : 'border-accent/30 bg-card text-foreground',
+        'fixed bottom-6 right-6 z-[60] w-[min(22rem,calc(100vw-3rem))] animate-toast-in overflow-hidden rounded-xl border bg-popover text-sm shadow-2xl motion-reduce:animate-none',
+        message.error ? 'border-destructive/30' : 'border-border',
       )}
     >
-      {message.error ? (
-        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-      ) : (
-        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-      )}
-      <span className="flex-1">{message.text}</span>
-      <button
-        type="button"
-        onClick={() => setVisible(null)}
-        aria-label="Dismiss"
-        className="text-muted-foreground hover:text-foreground"
-      >
-        <X className="h-4 w-4" />
-      </button>
+      <div className="flex items-start gap-3 p-4">
+        <span
+          className={cn(
+            'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
+            message.error ? 'bg-destructive/10 text-destructive' : 'bg-accent/15 text-accent',
+          )}
+        >
+          {message.error ? <AlertCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4" />}
+        </span>
+        <div className="flex-1 pt-0.5">
+          <p className="font-semibold text-foreground">{message.error ? 'Something went wrong' : 'Done'}</p>
+          <p className="mt-0.5 text-muted-foreground">{message.text}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setVisible(null)}
+          aria-label="Dismiss"
+          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+      {/* Time left before it closes */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          'block h-0.5 origin-left animate-drain [animation-duration:5s] motion-reduce:hidden',
+          message.error ? 'bg-destructive' : 'bg-accent',
+        )}
+      />
     </div>
   )
 }

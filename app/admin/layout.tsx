@@ -1,7 +1,17 @@
 import type { Metadata } from 'next'
+import { Sora } from 'next/font/google'
+import { cookies } from 'next/headers'
+import { THEME_COOKIE, parseTheme } from '@/lib/admin/preferences'
+import { cn } from '@/lib/utils'
 
 // Admin pages depend on the signed-in user: never prerender or cache them.
 export const dynamic = 'force-dynamic'
+
+const sora = Sora({
+  subsets: ['latin'],
+  variable: '--font-sora',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -11,6 +21,20 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
-  return children
+// Runs before first paint: resolves "system" to light/dark so there is no flash.
+const themeScript = `(function(){try{var r=document.currentScript.parentElement;if(r.dataset.theme==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches){r.classList.add('dark')}}catch(e){}})()`
+
+export default async function AdminRootLayout({ children }: { children: React.ReactNode }) {
+  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value)
+
+  return (
+    <div
+      className={cn(sora.variable, 'admin-root min-h-dvh bg-background text-foreground antialiased', theme === 'dark' && 'dark')}
+      data-theme={theme}
+      suppressHydrationWarning
+    >
+      <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      {children}
+    </div>
+  )
 }
