@@ -5,13 +5,13 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Menu, X, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { navLinks, company } from '@/lib/site-data'
+import { navLinks } from '@/lib/site-data'
 import { Logo } from '@/components/logo'
 
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
 
-export function SiteHeader() {
+export function SiteHeader({ companyName }: { companyName: string }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -74,7 +74,7 @@ export function SiteHeader() {
         <Link
           href="/"
           className={cn('flex items-center gap-2.5 rounded-md', focusRing)}
-          aria-label={`${company.name} home`}
+          aria-label={`${companyName} home`}
         >
           <Logo className="h-7 w-auto" />
         </Link>

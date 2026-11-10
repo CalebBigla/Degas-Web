@@ -1,8 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { siteUrl } from '@/lib/site-data'
 import './globals.css'
 
@@ -67,9 +65,7 @@ export default function RootLayout({
         <noscript>
           <style>{`[data-reveal='hidden']{opacity:1!important;transform:none!important}`}</style>
         </noscript>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

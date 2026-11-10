@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import { clients, type Client } from '@/lib/site-data'
+import { getClients } from '@/lib/content'
+import type { Client } from '@/lib/content-types'
 
 function ClientLogo({ client }: { client: Client }) {
   if (client.logo) {
@@ -22,7 +23,7 @@ function ClientLogo({ client }: { client: Client }) {
   )
 }
 
-function LogoGroup({ duplicate = false }: { duplicate?: boolean }) {
+function LogoGroup({ clients, duplicate = false }: { clients: Client[]; duplicate?: boolean }) {
   return (
     <ul
       aria-hidden={duplicate || undefined}
@@ -36,7 +37,7 @@ function LogoGroup({ duplicate = false }: { duplicate?: boolean }) {
       )}
     >
       {clients.map((client) => (
-        <li key={client.name} className="flex h-10 items-center">
+        <li key={client.id} className="flex h-10 items-center">
           <ClientLogo client={client} />
         </li>
       ))}
@@ -44,7 +45,8 @@ function LogoGroup({ duplicate = false }: { duplicate?: boolean }) {
   )
 }
 
-export function ClientMarquee() {
+export async function ClientMarquee() {
+  const clients = await getClients()
   if (clients.length === 0) return null
 
   return (
@@ -63,8 +65,8 @@ export function ClientMarquee() {
           className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:animate-none"
           style={{ '--marquee-duration': `${Math.max(clients.length * 6, 30)}s` } as React.CSSProperties}
         >
-          <LogoGroup />
-          <LogoGroup duplicate />
+          <LogoGroup clients={clients} />
+          <LogoGroup clients={clients} duplicate />
         </div>
       </div>
     </section>

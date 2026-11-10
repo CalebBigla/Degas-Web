@@ -1,14 +1,15 @@
 import { ArrowRight, ShieldCheck, Award, FolderCheck } from 'lucide-react'
 import { ButtonLink } from '@/components/button-link'
-import { company } from '@/lib/site-data'
+import { getSettings } from '@/lib/content'
 
-const badges = [
-  { icon: ShieldCheck, label: `Registered company (CAC RC ${company.rcNumber})` },
-  { icon: Award, label: '5+ Years Combined Experience' },
-  { icon: FolderCheck, label: '20+ Projects Delivered' },
-]
+export async function Hero() {
+  const company = await getSettings()
+  const badges = [
+    { icon: ShieldCheck, label: `Registered company (CAC RC ${company.rcNumber})` },
+    { icon: Award, label: '5+ Years Combined Experience' },
+    { icon: FolderCheck, label: '20+ Projects Delivered' },
+  ]
 
-export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border bg-background">
       <div

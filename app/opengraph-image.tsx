@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { company } from '@/lib/site-data'
+import { defaultSettings as company } from '@/lib/site-data'
 
 export const alt = `${company.name} — We simplify solutions across the tech space`
 export const size = { width: 1200, height: 630 }

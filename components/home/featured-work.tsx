@@ -1,16 +1,12 @@
 import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
 import { ProjectCard } from '@/components/project-card'
-import { projects } from '@/lib/site-data'
+import { getFeaturedProjects } from '@/lib/content'
 import { Reveal } from '@/components/reveal'
 
-export function FeaturedWork() {
-  const featured = [
-    projects.find((p) => p.slug === 'kyc-verification-system'),
-    projects.find((p) => p.slug === 'real-estate-management-system'),
-    projects.find((p) => p.slug === 'attendance-management-system'),
-    projects.find((p) => p.slug === 'job-portal-system'),
-  ].filter(Boolean) as typeof projects
+export async function FeaturedWork() {
+  const featured = await getFeaturedProjects()
+  if (featured.length === 0) return null
 
   return (
     <section className="border-t border-border bg-secondary px-4 py-16 sm:px-6 lg:px-8 lg:py-24">

@@ -1,0 +1,135 @@
+'use client'
+
+import { useActionState } from 'react'
+import { saveProject } from '@/lib/admin/actions'
+import { fieldValues, initialFormState } from '@/lib/admin/form'
+import type { Project } from '@/lib/content-types'
+import { Card } from '@/components/admin/ui'
+import { ListField, TextAreaField, TextField, ToggleField } from '@/components/admin/fields'
+import { FormActions, FormAlert } from '@/components/admin/form-controls'
+import { ImageField } from '@/components/admin/image-field'
+
+export function ProjectForm({ project }: { project?: Project }) {
+  const [state, action] = useActionState(saveProject, initialFormState)
+  const e = state.errors ?? {}
+  const f = fieldValues(state)
+
+  return (
+    <form action={action} noValidate>
+      <FormAlert state={state} />
+      {project && <input type="hidden" name="id" value={project.id} />}
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <Card title="Details" description="Shown on project cards and at the top of the case study.">
+            <div className="flex flex-col gap-5">
+              <TextField name="title" label="Title" defaultValue={f.text('title', project?.title)} error={e.title} required />
+              <div className="grid gap-5 sm:grid-cols-2">
+                <TextField
+                  name="category"
+                  label="Category"
+                  placeholder="e.g. Fintech / Compliance"
+                  defaultValue={f.text('category', project?.category)}
+                  error={e.category}
+                />
+                <TextField
+                  name="slug"
+                  label="URL slug"
+                  optional
+                  placeholder="generated-from-title"
+                  defaultValue={f.text('slug', project?.slug)}
+                  error={e.slug}
+                  help="The page address: /work/your-slug. Leave blank to generate it."
+                />
+              </div>
+              <TextAreaField
+                name="description"
+                label="Short description"
+                rows={3}
+                maxLength={280}
+                defaultValue={f.text('description', project?.description)}
+                error={e.description}
+                help="One or two sentences, up to 280 characters."
+              />
+            </div>
+          </Card>
+
+          <Card
+            title="Case study"
+            description="Leave any field blank to use the standard wording shown on the site today."
+          >
+            <div className="flex flex-col gap-5">
+              <TextAreaField
+                name="overview"
+                label="Overview"
+                optional
+                rows={5}
+                defaultValue={f.text('overview', project?.overview)}
+                error={e.overview}
+              />
+              <TextAreaField
+                name="approach"
+                label="The approach"
+                optional
+                rows={5}
+                defaultValue={f.text('approach', project?.approach)}
+                error={e.approach}
+              />
+              <ListField
+                name="highlights"
+                label="What we delivered"
+                optional
+                rows={5}
+                defaultValue={f.list('highlights', project?.highlights)}
+                error={e.highlights}
+              />
+              <TextField
+                name="services_label"
+                label="Services"
+                optional
+                placeholder="Design & Development"
+                defaultValue={f.text('services_label', project?.servicesLabel)}
+                error={e.services_label}
+                help="Shown in the project details box."
+              />
+            </div>
+          </Card>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <Card title="Visibility">
+            <div className="flex flex-col gap-5">
+              <ToggleField
+                name="published"
+                label="Published"
+                description="Visible on the public site."
+                defaultChecked={f.checked('published', project?.published ?? true)}
+              />
+              <ToggleField
+                name="featured"
+                label="Featured"
+                description="Shown in Featured Work on the home page (first 4)."
+                defaultChecked={f.checked('featured', project?.featured ?? false)}
+              />
+            </div>
+          </Card>
+
+          <Card title="Cover image">
+            <ImageField
+              name="cover_image"
+              label="Screenshot or mockup"
+              folder="projects"
+              defaultValue={project?.coverImage}
+              error={e.cover_image}
+              help="16:10 or 16:9 works best, at least 1600px wide."
+            />
+          </Card>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        <FormActions cancelHref="/admin/projects" isNew={!project} />
+      </div>
+    </form>
+  )
+}

@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section-heading'
-import { services } from '@/lib/site-data'
+import { getServices } from '@/lib/content'
+import { getIcon } from '@/lib/icons'
 import { Reveal } from '@/components/reveal'
 
-export function ServicesOverview() {
+export async function ServicesOverview() {
+  const services = await getServices()
   return (
     <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-6xl">
@@ -15,10 +17,12 @@ export function ServicesOverview() {
         />
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {services.map(({ slug, title, summary, icon: Icon }, index) => (
+          {services.map(({ slug, title, summary, icon }, index) => {
+            const Icon = getIcon(icon)
+            return (
             <Link
               key={slug}
-              href="/services"
+              href={`/services#${slug}`}
               className="group flex flex-col bg-card p-7 transition-colors hover:bg-secondary"
             >
               <Reveal delay={index * 80} className="flex flex-col gap-4">
@@ -32,7 +36,8 @@ export function ServicesOverview() {
               <p className="text-sm leading-relaxed text-muted-foreground">{summary}</p>
               </Reveal>
             </Link>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

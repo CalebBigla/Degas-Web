@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
-import { navLinks, company } from '@/lib/site-data'
+import { navLinks } from '@/lib/site-data'
+import { getSettings } from '@/lib/content'
 import { Logo } from '@/components/logo'
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const company = await getSettings()
   const year = new Date().getFullYear()
 
   return (
