@@ -5,13 +5,21 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Menu, X, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { navLinks } from '@/lib/site-data'
+import type { NavLink } from '@/lib/site-data'
 import { Logo } from '@/components/logo'
 
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
 
-export function SiteHeader({ companyName }: { companyName: string }) {
+export function SiteHeader({
+  companyName,
+  links,
+  ctaLabel,
+}: {
+  companyName: string
+  links: NavLink[]
+  ctaLabel: string
+}) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -80,7 +88,7 @@ export function SiteHeader({ companyName }: { companyName: string }) {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -108,7 +116,7 @@ export function SiteHeader({ companyName }: { companyName: string }) {
               focusRing,
             )}
           >
-            Get a Quote
+            {ctaLabel}
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
 
@@ -146,7 +154,7 @@ export function SiteHeader({ companyName }: { companyName: string }) {
             )}
             aria-label="Mobile"
           >
-            {navLinks.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -171,7 +179,7 @@ export function SiteHeader({ companyName }: { companyName: string }) {
                 focusRing,
               )}
             >
-              Get a Quote
+              {ctaLabel}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </nav>

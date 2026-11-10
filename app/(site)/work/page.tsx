@@ -4,21 +4,21 @@ import { ProjectCard } from '@/components/project-card'
 import { CtaBanner } from '@/components/cta-banner'
 import { getProjects } from '@/lib/content'
 import { Reveal } from '@/components/reveal'
+import { getPage } from '@/lib/pages/get'
 
-export const metadata: Metadata = {
-  title: 'Work',
-  description:
-    'Case studies from Degas Concepts Limited — KYC verification, real estate management, job portals, payroll, attendance systems, and community apps built with simplicity and excellence.',
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await getPage('work')
+  return { title: copy['seo.title'], description: copy['seo.description'] }
 }
 
 export default async function WorkPage() {
-  const projects = await getProjects()
+  const [projects, copy] = await Promise.all([getProjects(), getPage('work')])
   return (
     <>
       <PageHero
-        eyebrow="Our work"
-        title="Systems we have designed and delivered"
-        description="A selection of the products and platforms we have shipped for teams across fintech, real estate, enterprise, and community sectors."
+        eyebrow={copy['hero.eyebrow']}
+        title={copy['hero.title']}
+        description={copy['hero.description']}
       />
 
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
@@ -33,10 +33,7 @@ export default async function WorkPage() {
         </div>
       </section>
 
-      <CtaBanner
-        title="Have a project like these?"
-        description="We'd love to hear about it. Let's scope it together and give you a clear, honest quote."
-      />
+      <CtaBanner copy={copy} />
     </>
   )
 }

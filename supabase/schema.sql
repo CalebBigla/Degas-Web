@@ -124,11 +124,20 @@ create table if not exists public.team_members (
   updated_at timestamptz not null default now()
 );
 
+-- Page copy: one row per public page (home, about, …, site). `content` holds
+-- the edited text keyed by field; anything missing falls back to the defaults
+-- in lib/pages/definitions.ts.
+create table if not exists public.pages (
+  slug text primary key check (slug ~ '^[a-z]+$'),
+  content jsonb not null default '{}'::jsonb check (jsonb_typeof(content) = 'object'),
+  updated_at timestamptz not null default now()
+);
+
 -- updated_at triggers
 do $$
 declare t text;
 begin
-  foreach t in array array['site_settings', 'services', 'core_values', 'projects', 'clients', 'team_members']
+  foreach t in array array['site_settings', 'pages', 'services', 'core_values', 'projects', 'clients', 'team_members']
   loop
     execute format('drop trigger if exists set_updated_at on public.%I', t);
     execute format(
@@ -153,6 +162,13 @@ drop policy if exists "Public read" on public.site_settings;
 create policy "Public read" on public.site_settings for select using (true);
 drop policy if exists "Admin write" on public.site_settings;
 create policy "Admin write" on public.site_settings
+  for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+alter table public.pages enable row level security;
+drop policy if exists "Public read" on public.pages;
+create policy "Public read" on public.pages for select using (true);
+drop policy if exists "Admin write" on public.pages;
+create policy "Admin write" on public.pages
   for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
 do $$

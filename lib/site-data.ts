@@ -1,7 +1,8 @@
 /**
  * Static site structure, plus the built-in default content.
  *
- * Editable content (company info, services, values, projects, clients, team)
+ * Editable content (company info, services, values, projects, clients, team;
+ * page copy lives in lib/pages/definitions.ts)
  * is managed in the admin dashboard and stored in Supabase. The defaults below
  * are only used when Supabase is not configured or cannot be reached, so the
  * site always renders. They mirror supabase/seed.sql.
@@ -17,55 +18,16 @@ import type {
 
 export const siteUrl = 'https://degasconcepts.com'
 
+/** Site navigation. Labels are editable in the admin (Pages → Header & footer). */
 export const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'Work', href: '/work' },
-  { label: 'Contact', href: '/contact' },
-]
+  { key: 'nav.home', href: '/' },
+  { key: 'nav.about', href: '/about' },
+  { key: 'nav.services', href: '/services' },
+  { key: 'nav.work', href: '/work' },
+  { key: 'nav.contact', href: '/contact' },
+] as const
 
-export const processSteps = [
-  {
-    step: '01',
-    title: 'Discover',
-    description:
-      'We start by understanding your goals, users, and constraints to define the right problem.',
-  },
-  {
-    step: '02',
-    title: 'Design',
-    description:
-      'We translate requirements into clear, intuitive designs and validated prototypes.',
-  },
-  {
-    step: '03',
-    title: 'Build',
-    description:
-      'We engineer robust, scalable solutions with clean, maintainable code.',
-  },
-  {
-    step: '04',
-    title: 'Deliver & Support',
-    description:
-      'We ship on time and stay on to support, maintain, and improve what we built.',
-  },
-]
-
-/** Case study fallbacks used when a project has no custom text in the CMS. */
-export const defaultCaseStudy = {
-  overview: (title: string) =>
-    `We partnered with the client to design and build the ${title.toLowerCase()}, translating complex requirements into a simple, reliable product. Our team led the effort end to end — from discovery and design through engineering and delivery.`,
-  approach:
-    "Following our Discover, Design, Build, and Deliver process, we prioritized clarity at every stage — ensuring the solution was easy to use, secure, and built to scale with the client's needs.",
-  highlights: [
-    'Clear discovery and scoping before a single line of code',
-    'Design system for a consistent, accessible interface',
-    'Scalable, well-documented, and maintainable codebase',
-    'On-time delivery with ongoing support',
-  ],
-  servicesLabel: 'Design & Development',
-}
+export type NavLink = { label: string; href: string }
 
 // ---------------------------------------------------------------------------
 // Default content

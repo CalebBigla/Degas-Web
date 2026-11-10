@@ -1,19 +1,21 @@
 import { SectionHeading } from '@/components/section-heading'
-import { processSteps } from '@/lib/site-data'
+import type { PageContent } from '@/lib/pages/definitions'
 import { Reveal } from '@/components/reveal'
 
-export function HowWeWork() {
+export function HowWeWork({ copy }: { copy: PageContent<'home'> }) {
   return (
     <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="How we work"
-          title="A clear path from idea to delivery"
-          description="A simple, transparent process that keeps you informed and in control at every stage."
+          eyebrow={copy['process.eyebrow']}
+          title={copy['process.title']}
+          description={copy['process.description']}
         />
 
         <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {processSteps.map(({ step, title, description }, index) => (
+          {copy['process.steps'].map(({ title, description }, index) => {
+            const step = String(index + 1).padStart(2, '0')
+            return (
             <Reveal
               as="li"
               key={step}
@@ -28,7 +30,8 @@ export function HowWeWork() {
                 {description}
               </p>
             </Reveal>
-          ))}
+            )
+          })}
         </ol>
       </div>
     </section>

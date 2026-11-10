@@ -45,7 +45,7 @@ function LogoGroup({ clients, duplicate = false }: { clients: Client[]; duplicat
   )
 }
 
-export async function ClientMarquee() {
+export async function ClientMarquee({ heading }: { heading: string }) {
   const clients = await getClients()
   if (clients.length === 0) return null
 
@@ -53,7 +53,7 @@ export async function ClientMarquee() {
     <section className="border-b border-border bg-background py-12">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Trusted by teams we&apos;ve built solutions for
+          {heading}
         </p>
       </div>
 

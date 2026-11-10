@@ -1,16 +1,17 @@
 import { SectionHeading } from '@/components/section-heading'
 import { getCoreValues } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
+import type { PageContent } from '@/lib/pages/definitions'
 
-export async function WhyChoose() {
+export async function WhyChoose({ copy }: { copy: PageContent<'home'> }) {
   const coreValues = await getCoreValues()
   return (
     <section className="border-y border-border bg-secondary px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="Why Degas Concepts"
-          title="Principles that guide every project"
-          description="Our core values are not slogans — they define how we plan, communicate, and deliver."
+          eyebrow={copy['values.eyebrow']}
+          title={copy['values.title']}
+          description={copy['values.description']}
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">

@@ -3,34 +3,34 @@ import { Phone, Mail, MessageCircle, ShieldCheck, MapPin, Clock, Wallet } from '
 import { PageHero } from '@/components/page-hero'
 import { ContactForm } from '@/components/contact-form'
 import { getSettings } from '@/lib/content'
+import { getPage } from '@/lib/pages/get'
 
-export const metadata: Metadata = {
-  title: 'Contact',
-  description:
-    "Contact Degas Concepts Limited — let's build something simple, reliable, and excellent. Reach us by phone, WhatsApp, or email, or request a quote through our contact form.",
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await getPage('contact')
+  return { title: copy['seo.title'], description: copy['seo.description'] }
 }
 
 
 export default async function ContactPage() {
-  const company = await getSettings()
+  const [company, copy] = await Promise.all([getSettings(), getPage('contact')])
   const directContacts = [
     {
       icon: MessageCircle,
-      label: 'Phone / WhatsApp',
+      label: copy['direct.whatsappLabel'],
       value: company.phone,
       href: company.whatsapp,
       external: true,
     },
     {
       icon: Mail,
-      label: 'Email',
+      label: copy['direct.emailLabel'],
       value: company.email,
       href: `mailto:${company.email}`,
       external: false,
     },
     {
       icon: Phone,
-      label: 'Call us',
+      label: copy['direct.callLabel'],
       value: company.phone,
       href: `tel:${company.phone.replace(/\s/g, '')}`,
       external: false,
@@ -40,9 +40,9 @@ export default async function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="Let's build something simple, reliable, and excellent."
-        description="Tell us about your project and goals. We'll get back to you with clear next steps and an honest quote."
+        eyebrow={copy['hero.eyebrow']}
+        title={copy['hero.title']}
+        description={copy['hero.description']}
       />
 
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
@@ -50,12 +50,23 @@ export default async function ContactPage() {
           {/* Form */}
           <div className="lg:col-span-7">
             <div className="rounded-2xl border border-border bg-card p-8 lg:p-10">
-              <h2 className="text-xl font-bold text-foreground">Send us a message</h2>
+              <h2 className="text-xl font-bold text-foreground">{copy['form.title']}</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Fill out the form and our team will respond promptly.
+                {copy['form.intro']}
               </p>
               <div className="mt-7">
-                <ContactForm />
+                <ContactForm
+                  copy={{
+                    name: copy['form.nameLabel'],
+                    email: copy['form.emailLabel'],
+                    company: copy['form.companyLabel'],
+                    optional: copy['form.optionalLabel'],
+                    message: copy['form.messageLabel'],
+                    submit: copy['form.submitLabel'],
+                    sending: copy['form.sendingLabel'],
+                    successTitle: copy['form.successTitle'],
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -63,7 +74,7 @@ export default async function ContactPage() {
           {/* Direct contact */}
           <div className="flex flex-col gap-6 lg:col-span-5">
             <div className="rounded-2xl border border-border bg-secondary p-8">
-              <h2 className="text-lg font-bold text-foreground">Reach us directly</h2>
+              <h2 className="text-lg font-bold text-foreground">{copy['direct.title']}</h2>
               <ul className="mt-5 space-y-4">
                 {directContacts.map(({ icon: Icon, label, value, href, external }) => (
                   <li key={label}>
@@ -94,10 +105,9 @@ export default async function ContactPage() {
             <div className="flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent/5 p-6">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <div>
-                <p className="text-sm font-semibold text-foreground">CAC Registered Company</p>
+                <p className="text-sm font-semibold text-foreground">{copy['trust.title']}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Degas Concepts Limited is a registered Nigerian company. You&apos;re
-                  working with a legitimate, accountable team.
+                  {copy['trust.body']}
                 </p>
               </div>
             </div>
@@ -105,10 +115,9 @@ export default async function ContactPage() {
             <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
-                <p className="text-sm font-semibold text-foreground">Location</p>
+                <p className="text-sm font-semibold text-foreground">{copy['location.title']}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Nigeria — serving clients remotely worldwide. A physical office address
-                  can be added here as we grow.
+                  {copy['location.body']}
                 </p>
               </div>
             </div>
@@ -116,7 +125,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
               <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
-                <p className="text-sm font-semibold text-foreground">Working hours</p>
+                <p className="text-sm font-semibold text-foreground">{copy['hours.title']}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {company.workingHours}
                 </p>
@@ -126,7 +135,7 @@ export default async function ContactPage() {
             <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
               <Wallet className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
-                <p className="text-sm font-semibold text-foreground">Payment options</p>
+                <p className="text-sm font-semibold text-foreground">{copy['payment.title']}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {company.paymentOptions}
                 </p>

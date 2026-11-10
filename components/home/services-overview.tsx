@@ -4,16 +4,17 @@ import { SectionHeading } from '@/components/section-heading'
 import { getServices } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
 import { Reveal } from '@/components/reveal'
+import type { PageContent } from '@/lib/pages/definitions'
 
-export async function ServicesOverview() {
+export async function ServicesOverview({ copy }: { copy: PageContent<'home'> }) {
   const services = await getServices()
   return (
     <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="What we do"
-          title="Services built for reliable outcomes"
-          description="A full-stack team covering design, web, mobile, and product — so you can ship complete solutions with a single trusted partner."
+          eyebrow={copy['services.eyebrow']}
+          title={copy['services.title']}
+          description={copy['services.description']}
         />
 
         <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">

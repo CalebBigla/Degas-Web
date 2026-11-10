@@ -3,8 +3,9 @@ import { SectionHeading } from '@/components/section-heading'
 import { ProjectCard } from '@/components/project-card'
 import { getFeaturedProjects } from '@/lib/content'
 import { Reveal } from '@/components/reveal'
+import type { PageContent } from '@/lib/pages/definitions'
 
-export async function FeaturedWork() {
+export async function FeaturedWork({ copy }: { copy: PageContent<'home'> }) {
   const featured = await getFeaturedProjects()
   if (featured.length === 0) return null
 
@@ -13,15 +14,15 @@ export async function FeaturedWork() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Featured work"
-            title="Solutions we have delivered"
-            description="A selection of systems we have designed and built for teams across industries."
+            eyebrow={copy['work.eyebrow']}
+            title={copy['work.title']}
+            description={copy['work.description']}
           />
           <a
             href="/work"
             className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-accent transition-opacity hover:opacity-80"
           >
-            View all work
+            {copy['work.linkLabel']}
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>

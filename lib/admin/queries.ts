@@ -48,3 +48,30 @@ export async function adminSettings() {
   const { data } = await supabase.from('site_settings').select('*').eq('id', 1).maybeSingle()
   return data ? mapSettings(data) : defaultSettings
 }
+
+/** Last-saved time of each page (pages never edited are missing). */
+export async function adminPageTimestamps(): Promise<Record<string, string>> {
+  const { supabase } = await requireAdmin()
+  const { data, error } = await supabase.from('pages').select('slug, updated_at')
+  if (error) throw new Error(`Could not load pages: ${error.message}`)
+  return Object.fromEntries((data ?? []).map((row) => [row.slug as string, row.updated_at as string]))
+}
+
+/** One page's saved content (raw JSON) and when it was last saved. */
+export async function adminPage(slug: string) {
+  const { supabase } = await requireAdmin()
+  const { data, error } = await supabase
+    .from('pages')
+    .select('content, updated_at')
+    .eq('slug', slug)
+    .maybeSingle()
+  if (error) throw new Error(`Could not load page: ${error.message}`)
+  const content = data?.content
+  return {
+    content:
+      content && typeof content === 'object' && !Array.isArray(content)
+        ? (content as Record<string, unknown>)
+        : {},
+    updatedAt: (data?.updated_at as string | undefined) ?? null,
+  }
+}

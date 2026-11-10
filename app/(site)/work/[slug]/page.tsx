@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft, Check } from 'lucide-react'
 import { CtaBanner } from '@/components/cta-banner'
 import { Eyebrow } from '@/components/section-heading'
-import { defaultCaseStudy } from '@/lib/site-data'
+import { getPage } from '@/lib/pages/get'
 import { getProjectBySlug, getProjects } from '@/lib/content'
 
 export async function generateStaticParams() {
@@ -38,11 +38,13 @@ export default async function CaseStudyPage({
 
   if (!project) notFound()
 
-  const overview = project.overview || defaultCaseStudy.overview(project.title)
-  const approach = project.approach || defaultCaseStudy.approach
+  const copy = await getPage('work')
+  const overview =
+    project.overview || copy['case.defaultOverview'].replaceAll('{title}', project.title)
+  const approach = project.approach || copy['case.defaultApproach']
   const highlights =
-    project.highlights.length > 0 ? project.highlights : defaultCaseStudy.highlights
-  const servicesLabel = project.servicesLabel || defaultCaseStudy.servicesLabel
+    project.highlights.length > 0 ? project.highlights : copy['case.defaultHighlights']
+  const servicesLabel = project.servicesLabel || copy['case.defaultServices']
 
   return (
     <>
@@ -53,7 +55,7 @@ export default async function CaseStudyPage({
             className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-muted transition-colors hover:text-navy-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Work
+            {copy['case.backLabel']}
           </Link>
           <div className="mt-6 flex flex-col gap-4">
             <Eyebrow>{project.category}</Eyebrow>
@@ -86,19 +88,19 @@ export default async function CaseStudyPage({
         <div className="mx-auto grid max-w-4xl gap-12 lg:grid-cols-12">
           <div className="flex flex-col gap-8 lg:col-span-7">
             <div>
-              <h2 className="text-xl font-bold text-foreground">Overview</h2>
+              <h2 className="text-xl font-bold text-foreground">{copy['case.overviewHeading']}</h2>
               <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-muted-foreground">
                 {overview}
               </p>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">The approach</h2>
+              <h2 className="text-xl font-bold text-foreground">{copy['case.approachHeading']}</h2>
               <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-muted-foreground">
                 {approach}
               </p>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">What we delivered</h2>
+              <h2 className="text-xl font-bold text-foreground">{copy['case.highlightsHeading']}</h2>
               <ul className="mt-4 grid gap-3">
                 {highlights.map((item) => (
                   <li key={item} className="flex items-start gap-3">
@@ -114,33 +116,33 @@ export default async function CaseStudyPage({
 
           <aside className="lg:col-span-5">
             <div className="rounded-2xl border border-border bg-secondary p-7">
-              <h3 className="text-sm font-semibold text-foreground">Project details</h3>
+              <h3 className="text-sm font-semibold text-foreground">{copy['case.detailsHeading']}</h3>
               <dl className="mt-4 space-y-4 text-sm">
                 <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Category</dt>
+                  <dt className="text-muted-foreground">{copy['case.categoryLabel']}</dt>
                   <dd className="text-right font-medium text-foreground">{project.category}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Services</dt>
+                  <dt className="text-muted-foreground">{copy['case.servicesLabel']}</dt>
                   <dd className="text-right font-medium text-foreground">{servicesLabel}</dd>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Delivery</dt>
-                  <dd className="text-right font-medium text-foreground">On time</dd>
+                  <dt className="text-muted-foreground">{copy['case.deliveryLabel']}</dt>
+                  <dd className="text-right font-medium text-foreground">{copy['case.deliveryValue']}</dd>
                 </div>
               </dl>
               <Link
                 href="/contact"
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
               >
-                Start a similar project
+                {copy['case.ctaLabel']}
               </Link>
             </div>
           </aside>
         </div>
       </section>
 
-      <CtaBanner />
+      <CtaBanner copy={copy} />
     </>
   )
 }

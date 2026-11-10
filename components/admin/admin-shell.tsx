@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import {
   Building2,
   ExternalLink,
+  FileText,
   FolderKanban,
   Gem,
   Layers,
@@ -29,6 +30,7 @@ const NAV = [
   {
     heading: 'Content',
     items: [
+      { label: 'Pages', href: '/admin/pages', icon: FileText },
       { label: 'Projects', href: '/admin/projects', icon: FolderKanban },
       { label: 'Services', href: '/admin/services', icon: Layers },
       { label: 'Core values', href: '/admin/values', icon: Gem },

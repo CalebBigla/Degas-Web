@@ -6,6 +6,7 @@ import { requireAdmin } from '@/lib/admin/auth'
 import { isSupabaseConfigured } from '@/lib/supabase/config'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { iconNames } from '@/lib/icons'
+import { isPageSlug, pageFields, sanitizeField, type PageValue } from '@/lib/pages/definitions'
 import {
   checkbox,
   createValidator,
@@ -350,4 +351,62 @@ export async function saveSettings(_prev: FormState, formData: FormData): Promis
 
   refreshSite()
   redirect('/admin/settings?status=updated')
+}
+
+// -----------------------------------------------------------------------------
+// Page copy
+// -----------------------------------------------------------------------------
+
+/** Save the text of one page. The editor posts every field as JSON in `content`. */
+export async function savePage(slug: string, _prev: FormState, formData: FormData): Promise<FormState> {
+  if (!isPageSlug(slug)) return { message: 'Unknown page.' }
+  const { supabase } = await requireAdmin()
+
+  let submitted: Record<string, unknown>
+  try {
+    const parsed: unknown = JSON.parse(String(formData.get('content') ?? '{}'))
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error()
+    submitted = parsed as Record<string, unknown>
+  } catch {
+    return { message: 'Could not read the form. Reload the page and try again.' }
+  }
+
+  const content: Record<string, PageValue> = {}
+  const errors: Record<string, string> = {}
+
+  for (const field of pageFields(slug)) {
+    const value = sanitizeField(field, submitted[field.key])
+    if (value === undefined) continue
+    content[field.key] = value
+
+    if (field.kind === 'group') {
+      const items = value as Record<string, string>[]
+      const min = field.minItems ?? 0
+      if (items.length < min) {
+        errors[field.key] = `Add at least ${min} ${field.itemLabel.toLowerCase()}.`
+      }
+      items.forEach((item, index) => {
+        for (const sub of field.fields) {
+          if (sub.required && !item[sub.key]) {
+            errors[`${field.key}.${index}.${sub.key}`] = `${sub.label} is required.`
+          }
+        }
+      })
+    } else if (field.required && typeof value === 'string' && !value) {
+      errors[field.key] = `${field.label} is required.`
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { message: 'Some fields need attention. They are highlighted below.', errors }
+  }
+
+  const { error } = await supabase.from('pages').upsert({ slug, content })
+  if (error) {
+    console.error('[admin] Could not save page:', error.message)
+    return { message: 'Could not save your changes. Please try again.' }
+  }
+
+  refreshSite()
+  redirect(`/admin/pages/${slug}?status=updated`)
 }

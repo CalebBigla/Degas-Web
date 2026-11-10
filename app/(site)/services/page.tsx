@@ -5,21 +5,21 @@ import { CtaBanner } from '@/components/cta-banner'
 import { getServices } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
 import { Reveal } from '@/components/reveal'
+import { getPage } from '@/lib/pages/get'
 
-export const metadata: Metadata = {
-  title: 'Services',
-  description:
-    'Explore our services: UI/UX Design, Web Design & Development, WordPress Development, Product Design, Mobile App Development, and Landing Pages — delivered with simplicity and excellence.',
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await getPage('services')
+  return { title: copy['seo.title'], description: copy['seo.description'] }
 }
 
 export default async function ServicesPage() {
-  const services = await getServices()
+  const [services, copy] = await Promise.all([getServices(), getPage('services')])
   return (
     <>
       <PageHero
-        eyebrow="Services"
-        title="Everything you need to build and ship"
-        description="A complete range of design and development services, each delivered with a focus on clarity, quality, and dependable results."
+        eyebrow={copy['hero.eyebrow']}
+        title={copy['hero.title']}
+        description={copy['hero.description']}
       />
 
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
@@ -49,7 +49,7 @@ export default async function ServicesPage() {
 
               <div className="lg:col-span-7">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
-                  What&apos;s included
+                  {copy['list.includedLabel']}
                 </p>
                 <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                   {included.map((item) => (
@@ -68,11 +68,7 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <CtaBanner
-        title="Not sure which service you need?"
-        description="Tell us what you're trying to achieve and we'll recommend the right approach — and a clear quote."
-        primaryLabel="Request a Quote"
-      />
+      <CtaBanner copy={copy} />
     </>
   )
 }

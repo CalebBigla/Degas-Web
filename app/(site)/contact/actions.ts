@@ -1,5 +1,7 @@
 'use server'
 
+import { getPage } from '@/lib/pages/get'
+
 export type ContactState = {
   status: 'idle' | 'success' | 'error'
   message: string
@@ -35,7 +37,7 @@ export async function submitContact(
 
   // Silently accept honeypot submissions so bots think they succeeded.
   if (honeypot) {
-    return { status: 'success', message: 'Thank you. We will be in touch shortly.' }
+    return { status: 'success', message: (await getPage('contact'))['form.successMessage'] }
   }
 
   const payload = {
@@ -48,6 +50,7 @@ export async function submitContact(
   }
 
   const webhookUrl = process.env.CONTACT_WEBHOOK_URL
+  const copy = await getPage('contact')
 
   try {
     if (webhookUrl) {
@@ -65,14 +68,13 @@ export async function submitContact(
 
     return {
       status: 'success',
-      message: 'Thank you for reaching out. We will get back to you shortly.',
+      message: copy['form.successMessage'],
     }
   } catch (error) {
     console.log('[v0] Contact form error:', (error as Error).message)
     return {
       status: 'error',
-      message:
-        'Something went wrong sending your message. Please email us directly at degasconcept@gmail.com.',
+      message: copy['form.errorMessage'],
     }
   }
 }
