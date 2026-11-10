@@ -104,7 +104,7 @@ const site = {
 
 const home = {
   'hero.eyebrow': '{tagline}',
-  'hero.title': 'We simplify solutions across the tech space',
+  'hero.title': 'We simplify solutions across the **tech space**',
   'hero.intro':
     '{company} is a trusted provider of tech solutions. From design to deployment, we build reliable products with clarity, integrity, and excellence at every step.',
   'hero.primaryCta': 'Get a Quote',
@@ -563,7 +563,9 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
         description: 'The first thing visitors see.',
         fields: [
           t('hero.eyebrow', 'Eyebrow', { help: 'Small pill above the headline.' }),
-          t('hero.title', 'Headline'),
+          t('hero.title', 'Headline', {
+            help: 'Wrap words in **double asterisks** to highlight them with the animated gradient.',
+          }),
           area('hero.intro', 'Introduction'),
           t('hero.primaryCta', 'Main button', { max: 40, help: 'Links to the Contact page.' }),
           t('hero.secondaryCta', 'Second button', { max: 40, help: 'Links to the Work page.' }),
