@@ -31,15 +31,17 @@ function LogoGroup({ clients, duplicate = false }: { clients: Client[]; duplicat
       aria-hidden={duplicate || undefined}
       aria-label={duplicate ? undefined : 'Clients'}
       className={cn(
-        'flex shrink-0 items-center gap-16 pr-16',
+        // Each copy is at least as wide as the screen and spreads its logos
+        // evenly (space-around keeps the gap equal across the loop seam too).
+        'flex min-w-[100vw] shrink-0 items-center justify-around gap-x-16 px-8',
         // Reduced motion: a single static, centred, wrapping row.
         duplicate
           ? 'motion-reduce:hidden'
-          : 'motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-6 motion-reduce:pr-0',
+          : 'motion-reduce:min-w-0 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:gap-y-6',
       )}
     >
       {clients.map((client) => (
-        <li key={client.id} className="flex h-14 items-center sm:h-16">
+        <li key={client.id} className="flex h-14 shrink-0 items-center sm:h-16">
           <ClientLogo client={client} />
         </li>
       ))}
@@ -65,7 +67,7 @@ export async function ClientMarquee({ heading }: { heading: string }) {
         {/* Two identical groups; the track slides -50% so the loop is seamless. Pauses on hover. */}
         <div
           className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:animate-none"
-          style={{ '--marquee-duration': `${Math.max(clients.length * 6, 30)}s` } as React.CSSProperties}
+          style={{ '--marquee-duration': `${Math.max(clients.length * 5, 35)}s` } as React.CSSProperties}
         >
           <LogoGroup clients={clients} />
           <LogoGroup clients={clients} duplicate />
