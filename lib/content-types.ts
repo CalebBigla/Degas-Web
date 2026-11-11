@@ -16,7 +16,24 @@ export type SiteSettings = {
   rcNumber: string
   workingHours: string
   paymentOptions: string
+  address: string
+  instagram: string
+  xUrl: string
+  facebook: string
+  googleVerification: string
+  bingVerification: string
 }
+
+/** Search and sharing overrides on services, projects and articles. */
+export type Seo = {
+  seoTitle: string | null
+  seoDescription: string | null
+  shareImage: string | null
+  /** Hide from search engines (and the sitemap). */
+  noindex: boolean
+}
+
+export type Faq = { question: string; answer: string }
 
 export type Service = {
   id: string
@@ -27,8 +44,13 @@ export type Service = {
   summary: string
   description: string
   included: string[]
+  /** Long-form landing page content (rich text). */
+  body: string
+  /** Who the service is for and the problems it solves (rich text). */
+  audience: string
+  faqs: Faq[]
   published: boolean
-}
+} & Seo
 
 export type CoreValue = {
   id: string
@@ -49,9 +71,26 @@ export type Project = {
   highlights: string[]
   servicesLabel: string | null
   coverImage: string | null
+  coverAlt: string | null
+  /** Measurable outcomes, only where the client allows sharing them. */
+  results: string | null
+  serviceIds: string[]
   featured: boolean
   published: boolean
-}
+} & Seo
+
+export type Post = {
+  id: string
+  slug: string
+  title: string
+  excerpt: string
+  body: string
+  coverImage: string | null
+  coverAlt: string | null
+  author: string | null
+  publishedAt: string | null
+  published: boolean
+} & Seo
 
 export type Client = {
   id: string
@@ -95,7 +134,28 @@ export const mapSettings = (row: Row): SiteSettings => ({
   rcNumber: row.rc_number,
   workingHours: row.working_hours,
   paymentOptions: row.payment_options,
+  address: row.address ?? '',
+  instagram: row.instagram ?? '',
+  xUrl: row.x_url ?? '',
+  facebook: row.facebook ?? '',
+  googleVerification: row.google_verification ?? '',
+  bingVerification: row.bing_verification ?? '',
 })
+
+const seo = (row: Row): Seo => ({
+  seoTitle: row.seo_title || null,
+  seoDescription: row.seo_description || null,
+  shareImage: row.share_image || null,
+  noindex: Boolean(row.noindex),
+})
+
+function mapFaqs(value: unknown): Faq[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter((item): item is Record<string, unknown> => !!item && typeof item === 'object')
+    .map((item) => ({ question: String(item.question ?? ''), answer: String(item.answer ?? '') }))
+    .filter((item) => item.question && item.answer)
+}
 
 export const mapService = (row: Row): WithMeta<Service> => ({
   id: row.id,
@@ -105,7 +165,11 @@ export const mapService = (row: Row): WithMeta<Service> => ({
   summary: row.summary,
   description: row.description,
   included: row.included ?? [],
+  body: row.body ?? '',
+  audience: row.audience ?? '',
+  faqs: mapFaqs(row.faqs),
   published: row.published,
+  ...seo(row),
   ...meta(row),
 })
 
@@ -129,8 +193,27 @@ export const mapProject = (row: Row): WithMeta<Project> => ({
   highlights: row.highlights ?? [],
   servicesLabel: row.services_label ?? null,
   coverImage: row.cover_image ?? null,
+  coverAlt: row.cover_alt ?? null,
+  results: row.results ?? null,
+  serviceIds: row.service_ids ?? [],
   featured: row.featured,
   published: row.published,
+  ...seo(row),
+  ...meta(row),
+})
+
+export const mapPost = (row: Row): WithMeta<Post> => ({
+  id: row.id,
+  slug: row.slug,
+  title: row.title,
+  excerpt: row.excerpt ?? '',
+  body: row.body ?? '',
+  coverImage: row.cover_image ?? null,
+  coverAlt: row.cover_alt ?? null,
+  author: row.author ?? null,
+  publishedAt: row.published_at ?? null,
+  published: row.published,
+  ...seo(row),
   ...meta(row),
 })
 

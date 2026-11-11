@@ -10,16 +10,19 @@ import { createSupabasePublicClient } from '@/lib/supabase/server'
 import {
   mapClient,
   mapCoreValue,
+  mapPost,
   mapProject,
   mapService,
   mapSettings,
   mapTeamMember,
   type Client,
   type CoreValue,
+  type Post,
   type Project,
   type Service,
   type SiteSettings,
   type TeamMember,
+  type WithMeta,
 } from '@/lib/content-types'
 import {
   defaultClients,
@@ -101,15 +104,22 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
 })
 
 export const getServices = cache(
-  (): Promise<Service[]> => loadList('services', mapService, defaultServices),
+  (): Promise<WithMeta<Service>[]> =>
+    loadList('services', mapService, defaultServices.map((s) => ({ ...s, sortOrder: 0, updatedAt: null }))),
 )
+
+export const getServiceBySlug = cache(async (slug: string) => {
+  const services = await getServices()
+  return services.find((s) => s.slug === slug) ?? null
+})
 
 export const getCoreValues = cache(
   (): Promise<CoreValue[]> => loadList('core_values', mapCoreValue, defaultCoreValues),
 )
 
 export const getProjects = cache(
-  (): Promise<Project[]> => loadList('projects', mapProject, defaultProjects),
+  (): Promise<WithMeta<Project>[]> =>
+    loadList('projects', mapProject, defaultProjects.map((p) => ({ ...p, sortOrder: 0, updatedAt: null }))),
 )
 
 export const getFeaturedProjects = cache(async (limit = 4): Promise<Project[]> => {
@@ -130,3 +140,54 @@ export const getClients = cache(
 export const getTeam = cache(
   (): Promise<TeamMember[]> => loadList('team_members', mapTeamMember, defaultTeam),
 )
+
+// -----------------------------------------------------------------------------
+// Insights (blog)
+// -----------------------------------------------------------------------------
+
+const postsQuery = cachedQuery('posts', async () => {
+  const { data, error } = await createSupabasePublicClient()
+    .from('posts')
+    .select('*')
+    .eq('published', true)
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(error.message)
+  return (data ?? []) as Record<string, unknown>[]
+})
+
+/** Published articles, newest first. Empty until the posts table exists. */
+export const getPosts = cache(async (): Promise<WithMeta<Post>[]> => {
+  if (!isSupabaseConfigured) return []
+  try {
+    return (await postsQuery()).map(mapPost)
+  } catch (error) {
+    console.error('[content] Failed to load posts:', (error as Error).message)
+    return []
+  }
+})
+
+export const getPostBySlug = cache(async (slug: string) => {
+  const posts = await getPosts()
+  return posts.find((p) => p.slug === slug) ?? null
+})
+
+// -----------------------------------------------------------------------------
+// Page copy timestamps (sitemap)
+// -----------------------------------------------------------------------------
+
+const pageTimestampsQuery = cachedQuery('page_timestamps', async () => {
+  const { data, error } = await createSupabasePublicClient().from('pages').select('slug, updated_at')
+  if (error) throw new Error(error.message)
+  return Object.fromEntries((data ?? []).map((row) => [row.slug as string, row.updated_at as string]))
+})
+
+/** When each page's copy was last saved in the admin (missing = never edited). */
+export async function getPageTimestamps(): Promise<Record<string, string>> {
+  if (!isSupabaseConfigured) return {}
+  try {
+    return await pageTimestampsQuery()
+  } catch {
+    return {}
+  }
+}

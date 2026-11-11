@@ -6,7 +6,18 @@ import { ArrowLeft, Check } from 'lucide-react'
 import { CtaBanner } from '@/components/cta-banner'
 import { Eyebrow } from '@/components/section-heading'
 import { getPage } from '@/lib/pages/get'
-import { getProjectBySlug, getProjects } from '@/lib/content'
+import { getProjectBySlug, getProjects, getServices, getSettings } from '@/lib/content'
+import { RichText } from '@/components/rich-text'
+import { JsonLd } from '@/components/json-ld'
+import { proseClass } from '@/components/prose'
+import {
+  breadcrumbSchema,
+  buildMetadata,
+  caseStudySchema,
+  jsonLd,
+  shareCardUrl,
+  snippet,
+} from '@/lib/seo'
 
 export async function generateStaticParams() {
   const projects = await getProjects()
@@ -19,13 +30,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const project = await getProjectBySlug(slug)
-  if (!project) return { title: 'Case Study' }
-  return {
-    title: `${project.title} — Case Study`,
-    description: project.description,
-    ...(project.coverImage ? { openGraph: { images: [project.coverImage] } } : {}),
-  }
+  const [project, settings] = await Promise.all([getProjectBySlug(slug), getSettings()])
+  if (!project) return {}
+  return buildMetadata({
+    title: project.seoTitle || `${project.title} Case Study | ${settings.shortName}`,
+    description: project.seoDescription || snippet(project.description),
+    path: `/work/${project.slug}`,
+    image: project.shareImage || project.coverImage || shareCardUrl(project.title, project.category),
+    imageAlt: project.coverAlt ?? undefined,
+    noindex: project.noindex,
+  })
 }
 
 export default async function CaseStudyPage({
@@ -38,7 +52,8 @@ export default async function CaseStudyPage({
 
   if (!project) notFound()
 
-  const copy = await getPage('work')
+  const [copy, site, services] = await Promise.all([getPage('work'), getPage('site'), getServices()])
+  const usedServices = services.filter((s) => project.serviceIds.includes(s.id))
   const overview =
     project.overview || copy['case.defaultOverview'].replaceAll('{title}', project.title)
   const approach = project.approach || copy['case.defaultApproach']
@@ -48,6 +63,16 @@ export default async function CaseStudyPage({
 
   return (
     <>
+      <JsonLd
+        data={jsonLd(
+          breadcrumbSchema([
+            { name: site['nav.home'], path: '/' },
+            { name: site['nav.work'], path: '/work' },
+            { name: project.title, path: `/work/${project.slug}` },
+          ]),
+          caseStudySchema(project, project.seoDescription || snippet(project.description)),
+        )}
+      />
       <section className="border-b border-border bg-navy px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-4xl">
           <Link
@@ -74,7 +99,7 @@ export default async function CaseStudyPage({
           <div className="relative mx-auto aspect-[16/9] max-w-4xl overflow-hidden rounded-2xl border border-border bg-secondary">
             <Image
               src={project.coverImage}
-              alt={`${project.title} screenshot`}
+              alt={project.coverAlt || `${project.title} screenshot`}
               fill
               priority
               sizes="(min-width: 1024px) 896px, 100vw"
@@ -112,6 +137,14 @@ export default async function CaseStudyPage({
                 ))}
               </ul>
             </div>
+            {project.results && (
+              <div>
+                <h2 className="text-xl font-bold text-foreground">{copy['case.resultsHeading']}</h2>
+                <div className={`mt-3 ${proseClass}`}>
+                  <RichText text={project.results} />
+                </div>
+              </div>
+            )}
           </div>
 
           <aside className="lg:col-span-5">
@@ -124,7 +157,18 @@ export default async function CaseStudyPage({
                 </div>
                 <div className="flex justify-between gap-4 border-b border-border pb-3">
                   <dt className="text-muted-foreground">{copy['case.servicesLabel']}</dt>
-                  <dd className="text-right font-medium text-foreground">{servicesLabel}</dd>
+                  <dd className="text-right font-medium text-foreground">
+                    {usedServices.length > 0
+                      ? usedServices.map((service, i) => (
+                          <span key={service.id}>
+                            {i > 0 && ', '}
+                            <Link href={`/services/${service.slug}`} className="hover:text-accent hover:underline">
+                              {service.title}
+                            </Link>
+                          </span>
+                        ))
+                      : servicesLabel}
+                  </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">{copy['case.deliveryLabel']}</dt>

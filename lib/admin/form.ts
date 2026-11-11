@@ -15,7 +15,9 @@ export type FormState = {
 export function submittedValues(formData: FormData): Record<string, string> {
   const values: Record<string, string> = {}
   formData.forEach((value, key) => {
-    if (typeof value === 'string' && !key.startsWith('$ACTION')) values[key] = value
+    if (typeof value !== 'string' || key.startsWith('$ACTION')) return
+    // Repeated keys (checkbox groups) are kept, one per line.
+    values[key] = key in values ? `${values[key]}\n${value}` : value
   })
   return values
 }

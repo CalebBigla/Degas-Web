@@ -4,14 +4,22 @@ import { PageHero } from '@/components/page-hero'
 import { ContactForm } from '@/components/contact-form'
 import { getSettings } from '@/lib/content'
 import { getPage } from '@/lib/pages/get'
+import { buildMetadata } from '@/lib/seo'
+import { BreadcrumbJsonLd } from '@/components/breadcrumb-json-ld'
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getPage('contact')
-  return { title: copy['seo.title'], description: copy['seo.description'] }
+  return buildMetadata({
+    title: copy['seo.title'],
+    description: copy['seo.description'],
+    path: '/contact',
+    noindex: copy['seo.noindex'],
+  })
 }
 
 
 export default async function ContactPage() {
+  const site = await getPage('site')
   const [company, copy] = await Promise.all([getSettings(), getPage('contact')])
   const directContacts = [
     {
@@ -39,6 +47,7 @@ export default async function ContactPage() {
 
   return (
     <>
+      <BreadcrumbJsonLd trail={[{ name: site['nav.contact'], path: '/contact' }]} />
       <PageHero
         eyebrow={copy['hero.eyebrow']}
         title={copy['hero.title']}

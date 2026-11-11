@@ -76,6 +76,52 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
         </div>
       </Card>
 
+      <Card
+        title="Address & social profiles"
+        description="Helps Google connect your website, company and official profiles. Leave blank anything you don’t have."
+      >
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <TextAreaField
+              name="address"
+              label="Registered business address"
+              optional
+              rows={2}
+              defaultValue={f.text('address', settings.address)}
+              error={e.address}
+              help="Use exactly the same address everywhere it is published (Google Business Profile, CAC records, directories)."
+            />
+          </div>
+          <TextField name="instagram" label="Instagram URL" type="url" optional defaultValue={f.text('instagram', settings.instagram)} error={e.instagram} />
+          <TextField name="x_url" label="X (Twitter) URL" type="url" optional defaultValue={f.text('x_url', settings.xUrl)} error={e.x_url} />
+          <TextField name="facebook" label="Facebook URL" type="url" optional defaultValue={f.text('facebook', settings.facebook)} error={e.facebook} />
+        </div>
+      </Card>
+
+      <Card
+        title="Search engine verification"
+        description="Proves to Google and Bing that you own the site, so you can see search traffic and submit the sitemap."
+      >
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField
+            name="google_verification"
+            label="Google Search Console code"
+            optional
+            defaultValue={f.text('google_verification', settings.googleVerification)}
+            error={e.google_verification}
+            help="Search Console → Add property → URL prefix → HTML tag. Paste the code or the whole tag."
+          />
+          <TextField
+            name="bing_verification"
+            label="Bing Webmaster Tools code"
+            optional
+            defaultValue={f.text('bing_verification', settings.bingVerification)}
+            error={e.bing_verification}
+            help="Bing Webmaster Tools → Add site → HTML meta tag. Or import straight from Search Console."
+          />
+        </div>
+      </Card>
+
       <div className="flex justify-end">
         <SubmitButton>Save changes</SubmitButton>
       </div>

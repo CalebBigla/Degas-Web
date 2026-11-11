@@ -23,7 +23,7 @@ export async function ServicesOverview({ copy }: { copy: PageContent<'home'> }) 
             return (
             <Link
               key={slug}
-              href={`/services#${slug}`}
+              href={`/services/${slug}`}
               className="group flex flex-col bg-card p-7 transition-colors hover:bg-secondary"
             >
               <Reveal delay={index * 80} className="flex flex-col gap-4">

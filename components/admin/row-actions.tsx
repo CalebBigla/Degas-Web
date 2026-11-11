@@ -44,6 +44,7 @@ export function RowActions({
   viewHref,
   isFirst,
   isLast,
+  sortable = true,
 }: {
   table: string
   id: string
@@ -52,22 +53,28 @@ export function RowActions({
   viewHref?: string
   isFirst: boolean
   isLast: boolean
+  /** Show the move up/down buttons (off for date-ordered lists). */
+  sortable?: boolean
 }) {
   const deleteForm = useRef<HTMLFormElement>(null)
   const [confirming, setConfirming] = useState(false)
 
   return (
     <div className="flex items-center justify-end gap-0.5">
-      <form action={moveItem.bind(null, table, id, 'up')}>
-        <PendingIconButton label={`Move ${name} up`} disabled={isFirst}>
-          <ArrowUp className="h-4 w-4" />
-        </PendingIconButton>
-      </form>
-      <form action={moveItem.bind(null, table, id, 'down')}>
-        <PendingIconButton label={`Move ${name} down`} disabled={isLast}>
-          <ArrowDown className="h-4 w-4" />
-        </PendingIconButton>
-      </form>
+      {sortable && (
+        <>
+          <form action={moveItem.bind(null, table, id, 'up')}>
+            <PendingIconButton label={`Move ${name} up`} disabled={isFirst}>
+              <ArrowUp className="h-4 w-4" />
+            </PendingIconButton>
+          </form>
+          <form action={moveItem.bind(null, table, id, 'down')}>
+            <PendingIconButton label={`Move ${name} down`} disabled={isLast}>
+              <ArrowDown className="h-4 w-4" />
+            </PendingIconButton>
+          </form>
+        </>
+      )}
       {viewHref && (
         <a
           href={viewHref}

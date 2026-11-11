@@ -124,6 +124,54 @@ create table if not exists public.team_members (
   updated_at timestamptz not null default now()
 );
 
+-- Insights: articles for the blog at /insights.
+create table if not exists public.posts (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  excerpt text not null default '',
+  body text not null default '',
+  cover_image text,
+  cover_alt text,
+  author text,
+  published_at timestamptz,
+  published boolean not null default false,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- SEO fields (added later; safe to run again on an existing database).
+alter table public.site_settings add column if not exists address text not null default '';
+alter table public.site_settings add column if not exists instagram text not null default '';
+alter table public.site_settings add column if not exists x_url text not null default '';
+alter table public.site_settings add column if not exists facebook text not null default '';
+alter table public.site_settings add column if not exists google_verification text not null default '';
+alter table public.site_settings add column if not exists bing_verification text not null default '';
+
+do $$
+declare t text;
+begin
+  foreach t in array array['services', 'projects', 'posts']
+  loop
+    execute format('alter table public.%I add column if not exists seo_title text', t);
+    execute format('alter table public.%I add column if not exists seo_description text', t);
+    execute format('alter table public.%I add column if not exists share_image text', t);
+    execute format('alter table public.%I add column if not exists noindex boolean not null default false', t);
+  end loop;
+end;
+$$;
+
+-- Service landing pages (/services/slug): long-form content and FAQs.
+alter table public.services add column if not exists body text not null default '';
+alter table public.services add column if not exists audience text not null default '';
+alter table public.services add column if not exists faqs jsonb not null default '[]'::jsonb;
+
+-- Case studies: image alt text, measurable results, and the services used.
+alter table public.projects add column if not exists cover_alt text;
+alter table public.projects add column if not exists results text;
+alter table public.projects add column if not exists service_ids uuid[] not null default '{}';
+
 -- Page copy: one row per public page (home, about, ..., site). `content` holds
 -- the edited text keyed by field; anything missing falls back to the defaults
 -- in lib/pages/definitions.ts.
@@ -137,7 +185,7 @@ create table if not exists public.pages (
 do $$
 declare t text;
 begin
-  foreach t in array array['site_settings', 'pages', 'services', 'core_values', 'projects', 'clients', 'team_members']
+  foreach t in array array['site_settings', 'pages', 'services', 'core_values', 'projects', 'clients', 'team_members', 'posts']
   loop
     execute format('drop trigger if exists set_updated_at on public.%I', t);
     execute format(
@@ -174,7 +222,7 @@ create policy "Admin write" on public.pages
 do $$
 declare t text;
 begin
-  foreach t in array array['services', 'core_values', 'projects', 'clients', 'team_members']
+  foreach t in array array['services', 'core_values', 'projects', 'clients', 'team_members', 'posts']
   loop
     execute format('alter table public.%I enable row level security', t);
     execute format('drop policy if exists "Public read published" on public.%I', t);

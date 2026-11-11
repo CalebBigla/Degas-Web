@@ -97,9 +97,10 @@ const site = {
   'footer.privacyLabel': 'Privacy Policy',
   'footer.termsLabel': 'Terms of Use',
   'footer.slogan': 'Simplicity and Excellence.',
-  'seo.title': '{company} — {tagline}',
+  'nav.insights': 'Insights',
+  'seo.title': 'Web Development & Software Company in Nigeria | {short_name}',
   'seo.description':
-    '{company} is a CAC-registered tech solutions company. We simplify solutions across the tech space with simplicity and excellence — design, web, mobile, and product engineering.',
+    '{short_name} builds websites, mobile apps and custom software for businesses. Explore our design and technology services and request a project consultation.',
 }
 
 const home = {
@@ -161,9 +162,10 @@ const home = {
 }
 
 const about = {
-  'seo.title': 'About',
+  'seo.title': 'About {short_name} | Technology & Design Company',
   'seo.description':
-    '{company} is a CAC-registered tech solutions company built on transparency, integrity, and reliability — simplifying solutions across the tech space.',
+    'Meet {short_name}: a CAC-registered tech company built on transparency, integrity and reliability, simplifying design and software for growing businesses.',
+  'seo.noindex': false,
   'hero.eyebrow': 'About us',
   'hero.title': 'A trusted partner for tech solutions',
   'hero.description':
@@ -193,14 +195,21 @@ const about = {
 }
 
 const services = {
-  'seo.title': 'Services',
+  'seo.title': 'Web, App & Software Development Services | {short_name}',
   'seo.description':
-    'Explore our services: UI/UX Design, Web Design & Development, WordPress Development, Product Design, Mobile App Development, and Landing Pages — delivered with simplicity and excellence.',
+    'UI/UX design, web and WordPress development, mobile apps, product design and landing pages, delivered by {short_name} with simplicity and excellence.',
+  'seo.noindex': false,
   'hero.eyebrow': 'Services',
   'hero.title': 'Everything you need to build and ship',
   'hero.description':
     'A complete range of design and development services, each delivered with a focus on clarity, quality, and dependable results.',
   'list.includedLabel': "What's included",
+  'list.learnMore': 'Learn more',
+  'detail.backLabel': 'All services',
+  'detail.audienceHeading': 'Who it is for',
+  'detail.faqHeading': 'Frequently asked questions',
+  'detail.workHeading': 'Related work',
+  'detail.ctaLabel': 'Request a quote',
   'cta.title': 'Not sure which service you need?',
   'cta.description':
     "Tell us what you're trying to achieve and we'll recommend the right approach — and a clear quote.",
@@ -209,9 +218,10 @@ const services = {
 }
 
 const work = {
-  'seo.title': 'Work',
+  'seo.title': 'Software & Web Development Portfolio | {short_name}',
   'seo.description':
-    'Case studies from {company} — KYC verification, real estate management, job portals, payroll, attendance systems, and community apps built with simplicity and excellence.',
+    'Case studies from {short_name}: KYC verification, real estate management, payroll, attendance and job portal systems built for real clients.',
+  'seo.noindex': false,
   'hero.eyebrow': 'Our work',
   'hero.title': 'Systems we have designed and delivered',
   'hero.description':
@@ -242,12 +252,14 @@ const work = {
     'On-time delivery with ongoing support',
   ],
   'case.defaultServices': 'Design & Development',
+  'case.resultsHeading': 'Results',
 }
 
 const contact = {
-  'seo.title': 'Contact',
+  'seo.title': 'Contact {short_name} | Request a Project Quote',
   'seo.description':
-    "Contact {company} — let's build something simple, reliable, and excellent. Reach us by phone, WhatsApp, or email, or request a quote through our contact form.",
+    'Talk to {short_name} about your website, app or product. Reach us by phone, WhatsApp or email, or request a quote through our contact form.',
+  'seo.noindex': false,
   'hero.eyebrow': 'Contact',
   'hero.title': "Let's build something simple, reliable, and excellent.",
   'hero.description':
@@ -287,7 +299,8 @@ const legalNotice = {
 }
 
 const privacy = {
-  'seo.title': 'Privacy Policy',
+  'seo.title': 'Privacy Policy | {short_name}',
+  'seo.noindex': false,
   'seo.description':
     'How {company} collects, uses, and protects personal information submitted through this website.',
   'hero.eyebrow': 'Legal',
@@ -358,8 +371,9 @@ const privacy = {
 }
 
 const terms = {
-  'seo.title': 'Terms of Use',
+  'seo.title': 'Terms of Use | {short_name}',
   'seo.description': 'The terms that apply when you use the {company} website.',
+  'seo.noindex': false,
   'hero.eyebrow': 'Legal',
   'hero.title': 'Terms of Use',
   'hero.description':
@@ -417,7 +431,26 @@ const terms = {
   ] as GroupItem[],
 }
 
-export const pageDefaults = { home, about, services, work, contact, privacy, terms, site }
+const insights = {
+  'seo.title': 'Insights on Web, App & Software Development | {short_name}',
+  'seo.description':
+    'Practical guides from {short_name} on planning, designing and building websites, mobile apps and business software.',
+  'seo.noindex': false,
+  'hero.eyebrow': 'Insights',
+  'hero.title': 'Guides for building better digital products',
+  'hero.description':
+    'Practical advice on planning, designing and building websites, apps and business software.',
+  'list.readMore': 'Read article',
+  'list.empty': 'Articles are on the way. Check back soon.',
+  'post.backLabel': 'All insights',
+  'post.relatedHeading': 'More insights',
+  'cta.title': 'Planning a project?',
+  'cta.description': "Tell us what you're building and we'll give you a clear, honest quote.",
+  'cta.primaryLabel': 'Request a Quote',
+  'cta.secondaryLabel': 'View Our Work',
+}
+
+export const pageDefaults = { home, about, services, work, contact, privacy, terms, insights, site }
 
 export type PageSlug = keyof typeof pageDefaults
 export type PageContent<S extends PageSlug> = (typeof pageDefaults)[S]
@@ -467,11 +500,20 @@ function seoSection<K extends string>(): SectionDef<K> {
     title: 'Search & sharing',
     description: 'Shown in Google results and link previews. Not visible on the page itself.',
     fields: [
-      t('seo.title' as K, 'Page title', { max: 70, help: 'Keep under 60 characters.' }),
+      t('seo.title' as K, 'Page title', {
+        max: 70,
+        help: 'Shown exactly as typed in Google and browser tabs, so include your brand. Around 50–60 characters.',
+      }),
       area('seo.description' as K, 'Meta description', {
         max: 300,
-        help: 'Aim for 120–160 characters.',
+        help: 'Describe the page and give a reason to click. Around 120–160 characters; Google may shorten or rewrite it.',
       }),
+      {
+        key: 'seo.noindex' as K,
+        label: 'Hide from search engines',
+        kind: 'toggle',
+        help: 'Keeps the page out of Google and the sitemap. Leave off unless you have a reason.',
+      } as FieldDef<K>,
     ],
   }
 }
@@ -665,7 +707,22 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
         id: 'list',
         title: 'Service list',
         description: 'Each service is edited in Content → Services.',
-        fields: [t('list.includedLabel', '“Included” label', { max: 60 })],
+        fields: [
+          t('list.includedLabel', '“Included” label', { max: 60 }),
+          t('list.learnMore', '“Learn more” link', { max: 40 }),
+        ],
+      },
+      {
+        id: 'detail',
+        title: 'Service pages',
+        description: 'Labels on each service’s own page (/services/…).',
+        fields: [
+          t('detail.backLabel', 'Back link', { max: 40 }),
+          t('detail.audienceHeading', '“Who it is for” heading', { max: 60 }),
+          t('detail.faqHeading', 'FAQ heading', { max: 60 }),
+          t('detail.workHeading', 'Related work heading', { max: 60 }),
+          t('detail.ctaLabel', 'Quote button', { max: 40 }),
+        ],
       },
       ctaSection(),
       seoSection(),
@@ -688,6 +745,7 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
           t('case.overviewHeading', 'Overview heading'),
           t('case.approachHeading', 'Approach heading'),
           t('case.highlightsHeading', 'Highlights heading'),
+          t('case.resultsHeading', 'Results heading', { help: 'Shown when a project has results filled in.' }),
           t('case.detailsHeading', 'Details box heading'),
           t('case.categoryLabel', '“Category” label', { max: 40 }),
           t('case.servicesLabel', '“Services” label', { max: 40 }),
@@ -780,6 +838,27 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
     sections: [heroSection('hero'), ...legalSections<Key<'terms'>>(), seoSection()],
   }),
 
+  insights: definePage('insights', {
+    label: 'Insights',
+    description: 'The blog page header and labels. Articles are under Content → Insights.',
+    path: '/insights',
+    sections: [
+      heroSection('hero'),
+      {
+        id: 'list',
+        title: 'Labels',
+        fields: [
+          t('list.readMore', '“Read article” link', { max: 40 }),
+          t('list.empty', 'Message when there are no articles'),
+          t('post.backLabel', 'Back link on articles', { max: 40 }),
+          t('post.relatedHeading', 'More articles heading', { max: 60 }),
+        ],
+      },
+      ctaSection(),
+      seoSection(),
+    ],
+  }),
+
   site: definePage('site', {
     label: 'Header & footer',
     description: 'Navigation labels, footer text and the default search description.',
@@ -795,6 +874,7 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
           t('nav.services', 'Services', { max: 30 }),
           t('nav.work', 'Work', { max: 30 }),
           t('nav.contact', 'Contact', { max: 30 }),
+          t('nav.insights', 'Insights', { max: 30, help: 'Shown once at least one article is published.' }),
           t('header.cta', 'Header button', { max: 30, help: 'Links to the Contact page.' }),
         ],
       },
@@ -815,10 +895,13 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
       },
       {
         id: 'seo',
-        title: 'Search & sharing defaults',
-        description: 'Used for the home page and any page without its own.',
+        title: 'Home page search & sharing',
+        description: 'The home page title and description in Google and link previews.',
         fields: [
-          t('seo.title', 'Site title', { max: 90 }),
+          t('seo.title', 'Home page title', {
+            max: 90,
+            help: 'Shown exactly as typed. Lead with what you do and where, e.g. “Web Development Company in Nigeria | Degas Concepts”.',
+          }),
           area('seo.description', 'Meta description', { max: 300 }),
         ],
       },

@@ -3,6 +3,7 @@ import { requireAdmin } from '@/lib/admin/auth'
 import {
   mapClient,
   mapCoreValue,
+  mapPost,
   mapProject,
   mapService,
   mapSettings,
@@ -42,6 +43,19 @@ export const adminClients = () => list('clients', mapClient)
 export const adminClient = (id: string) => byId('clients', id, mapClient)
 export const adminTeam = () => list('team_members', mapTeamMember)
 export const adminTeamMember = (id: string) => byId('team_members', id, mapTeamMember)
+
+/** Articles, newest first (drafts included). */
+export async function adminPosts() {
+  const { supabase } = await requireAdmin()
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('published_at', { ascending: false, nullsFirst: true })
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(`Could not load posts: ${error.message}. Run supabase/schema.sql again to add the Insights table.`)
+  return (data ?? []).map(mapPost)
+}
+export const adminPost = (id: string) => byId('posts', id, mapPost)
 
 export async function adminSettings() {
   const { supabase } = await requireAdmin()

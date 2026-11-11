@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { adminServices } from '@/lib/admin/queries'
 import { getIcon } from '@/lib/icons'
 import {
+  Badge,
   DataTable,
   EmptyState,
   PageHeader,
@@ -11,6 +12,7 @@ import {
   formatUpdated,
 } from '@/components/admin/ui'
 import { RowActions } from '@/components/admin/row-actions'
+import { serviceIsIndexable } from '@/lib/seo-rules'
 
 export const metadata: Metadata = { title: 'Services' }
 
@@ -60,7 +62,15 @@ export default async function ServicesPage() {
                   {service.summary}
                 </Td>
                 <Td>
-                  <StatusBadge published={service.published} />
+                  <div className="flex flex-wrap gap-1.5">
+                    <StatusBadge published={service.published} />
+                    {service.published &&
+                      (serviceIsIndexable(service) ? (
+                        <Badge tone="success">In Google</Badge>
+                      ) : (
+                        <Badge tone="warning">{service.noindex ? 'Hidden from Google' : 'Needs content'}</Badge>
+                      ))}
+                  </div>
                 </Td>
                 <Td hideOnMobile className="whitespace-nowrap text-muted-foreground">
                   {formatUpdated(service.updatedAt)}
@@ -71,7 +81,7 @@ export default async function ServicesPage() {
                     id={service.id}
                     name={service.title}
                     editHref={`/admin/services/${service.id}`}
-                    viewHref={service.published ? `/services#${service.slug}` : undefined}
+                    viewHref={service.published ? `/services/${service.slug}` : undefined}
                     isFirst={i === 0}
                     isLast={i === services.length - 1}
                   />

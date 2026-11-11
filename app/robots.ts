@@ -1,10 +1,14 @@
 import type { MetadataRoute } from 'next'
-import { siteUrl } from '@/lib/site-data'
+import { absoluteUrl } from '@/lib/seo'
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: '*', allow: '/' },
-    sitemap: `${siteUrl}/sitemap.xml`,
-    host: siteUrl,
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      // The admin is private (and also marked noindex). /og only renders share images.
+      disallow: ['/admin', '/og'],
+    },
+    sitemap: absoluteUrl('/sitemap.xml'),
   }
 }

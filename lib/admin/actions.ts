@@ -28,6 +28,7 @@ const LIST_TABLES = {
   core_values: '/admin/values',
   clients: '/admin/clients',
   team_members: '/admin/team',
+  posts: '/admin/insights',
 } as const
 
 type ListTable = keyof typeof LIST_TABLES
@@ -182,6 +183,46 @@ export async function moveItem(table: string, id: string, direction: 'up' | 'dow
 // Content
 // -----------------------------------------------------------------------------
 
+type Validator = ReturnType<typeof createValidator>
+
+/** The "Search & sharing" card shared by services, projects and articles. */
+function seoValues(formData: FormData, v: Validator) {
+  const seoTitle = optionalText(formData, 'seo_title')
+  const seoDescription = optionalText(formData, 'seo_description')
+  const shareImage = optionalText(formData, 'share_image')
+  v.maxLength('seo_title', seoTitle, 90, 'SEO title')
+  v.maxLength('seo_description', seoDescription, 300, 'Meta description')
+  v.image('share_image', shareImage)
+  return {
+    seo_title: seoTitle,
+    seo_description: seoDescription,
+    share_image: shareImage,
+    noindex: checkbox(formData, 'noindex'),
+  }
+}
+
+/**
+ * FAQs are typed as blocks separated by a blank line: the first line is the
+ * question, the rest of the block is the answer.
+ */
+function parseFaqs(raw: string): { faqs: { question: string; answer: string }[]; error?: string } {
+  const blocks = raw
+    .replace(/\r\n?/g, '\n')
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+  const faqs = blocks.map((block) => {
+    const [question = '', ...rest] = block.split('\n')
+    return { question: question.trim(), answer: rest.join(' ').trim() }
+  })
+  const missing = faqs.find((faq) => !faq.answer)
+  if (missing) return { faqs, error: `“${missing.question}” needs an answer on the line below it.` }
+  if (faqs.length > 20) return { faqs, error: 'Use 20 questions or fewer.' }
+  return { faqs }
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export async function saveProject(_prev: FormState, formData: FormData): Promise<FormState> {
   const id = optionalText(formData, 'id')
   const title = text(formData, 'title')
@@ -198,6 +239,7 @@ export async function saveProject(_prev: FormState, formData: FormData): Promise
   if (slug && !SLUG_PATTERN.test(slug))
     v.add('slug', 'Use lowercase letters, numbers and hyphens only.')
   v.image('cover_image', coverImage)
+  const seo = seoValues(formData, v)
   if (!v.ok) return invalid(v.errors, formData)
 
   return persist(
@@ -213,8 +255,12 @@ export async function saveProject(_prev: FormState, formData: FormData): Promise
       highlights: lines(formData, 'highlights'),
       services_label: optionalText(formData, 'services_label'),
       cover_image: coverImage,
+      cover_alt: optionalText(formData, 'cover_alt'),
+      results: optionalText(formData, 'results'),
+      service_ids: formData.getAll('service_ids').map(String).filter((id) => UUID.test(id)),
       featured: checkbox(formData, 'featured'),
       published: checkbox(formData, 'published'),
+      ...seo,
     },
     formData,
     true,
@@ -237,6 +283,9 @@ export async function saveService(_prev: FormState, formData: FormData): Promise
   if (slug && !SLUG_PATTERN.test(slug))
     v.add('slug', 'Use lowercase letters, numbers and hyphens only.')
   if (!iconNames.includes(icon as never)) v.add('icon', 'Choose an icon.')
+  const { faqs, error: faqError } = parseFaqs(text(formData, 'faqs'))
+  if (faqError) v.add('faqs', faqError)
+  const seo = seoValues(formData, v)
   if (!v.ok) return invalid(v.errors, formData)
 
   return persist(
@@ -249,7 +298,58 @@ export async function saveService(_prev: FormState, formData: FormData): Promise
       summary,
       description,
       included: lines(formData, 'included'),
+      body: text(formData, 'body'),
+      audience: text(formData, 'audience'),
+      faqs,
       published: checkbox(formData, 'published'),
+      ...seo,
+    },
+    formData,
+    true,
+  )
+}
+
+export async function savePost(_prev: FormState, formData: FormData): Promise<FormState> {
+  const id = optionalText(formData, 'id')
+  const title = text(formData, 'title')
+  const slug = text(formData, 'slug') || slugify(title)
+  const excerpt = text(formData, 'excerpt')
+  const body = text(formData, 'body')
+  const coverImage = optionalText(formData, 'cover_image')
+  const coverAlt = optionalText(formData, 'cover_alt')
+  const published = checkbox(formData, 'published')
+  const date = text(formData, 'published_at')
+
+  const v = createValidator()
+  v.require('title', title, 'Title')
+  v.require('excerpt', excerpt, 'Summary')
+  v.maxLength('excerpt', excerpt, 300, 'Summary')
+  v.require('body', body, 'Article')
+  if (slug && !SLUG_PATTERN.test(slug))
+    v.add('slug', 'Use lowercase letters, numbers and hyphens only.')
+  v.image('cover_image', coverImage)
+  if (coverImage && !coverAlt) v.add('cover_alt', 'Describe the image for screen readers and Google.')
+  if (date && Number.isNaN(Date.parse(date))) v.add('published_at', 'Enter a valid date.')
+  const seo = seoValues(formData, v)
+  if (!v.ok) return invalid(v.errors, formData)
+
+  // Publishing without a date stamps it with today.
+  const publishedAt = date ? new Date(date).toISOString() : published ? new Date().toISOString() : null
+
+  return persist(
+    'posts',
+    id,
+    {
+      title,
+      slug,
+      excerpt,
+      body,
+      cover_image: coverImage,
+      cover_alt: coverAlt,
+      author: optionalText(formData, 'author'),
+      published_at: publishedAt,
+      published,
+      ...seo,
     },
     formData,
     true,
@@ -333,6 +433,18 @@ const SETTINGS_FIELDS = [
   ['payment_options', 'Payment options'],
 ] as const
 
+const OPTIONAL_SETTINGS_URLS = [
+  ['instagram', 'Instagram'],
+  ['x_url', 'X (Twitter)'],
+  ['facebook', 'Facebook'],
+] as const
+
+/** Accepts the bare code or the whole <meta … content="CODE"> tag the console gives you. */
+function verificationCode(formData: FormData, name: string): string {
+  const raw = text(formData, name)
+  return (/content=["']([^"']+)["']/i.exec(raw)?.[1] ?? raw).trim()
+}
+
 export async function saveSettings(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase } = await requireAdmin()
 
@@ -341,6 +453,17 @@ export async function saveSettings(_prev: FormState, formData: FormData): Promis
   for (const [field, label] of SETTINGS_FIELDS) {
     values[field] = text(formData, field)
     v.require(field, values[field], label)
+  }
+  for (const [field, label] of OPTIONAL_SETTINGS_URLS) {
+    values[field] = text(formData, field)
+    v.url(field, values[field] || null, label)
+  }
+  values.address = text(formData, 'address')
+  values.google_verification = verificationCode(formData, 'google_verification')
+  values.bing_verification = verificationCode(formData, 'bing_verification')
+  for (const field of ['google_verification', 'bing_verification'] as const) {
+    if (values[field] && !/^[\w-]{6,100}$/.test(values[field]))
+      v.add(field, 'Paste the code from the meta tag (letters, numbers, - and _ only).')
   }
   v.url('whatsapp', values.whatsapp, 'WhatsApp link')
   v.url('linkedin', values.linkedin, 'LinkedIn')

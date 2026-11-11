@@ -8,6 +8,7 @@
  * site always renders. They mirror supabase/seed.sql.
  */
 import type {
+  Seo,
   Client,
   CoreValue,
   Project,
@@ -16,7 +17,11 @@ import type {
   TeamMember,
 } from '@/lib/content-types'
 
-export const siteUrl = 'https://degasconcepts.com'
+/**
+ * The live site's preferred address (canonical URLs, sitemap, structured data).
+ * Set NEXT_PUBLIC_SITE_URL to override, e.g. for a staging domain.
+ */
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://degasconcepts.com').replace(/\/+$/, '')
 
 /** Site navigation. Labels are editable in the admin (Pages → Header & footer). */
 export const navLinks = [
@@ -24,6 +29,7 @@ export const navLinks = [
   { key: 'nav.about', href: '/about' },
   { key: 'nav.services', href: '/services' },
   { key: 'nav.work', href: '/work' },
+  { key: 'nav.insights', href: '/insights' },
   { key: 'nav.contact', href: '/contact' },
 ] as const
 
@@ -32,6 +38,9 @@ export type NavLink = { label: string; href: string }
 // ---------------------------------------------------------------------------
 // Default content
 // ---------------------------------------------------------------------------
+
+/** No search overrides: use the generated title, description and share card. */
+const noSeo: Seo = { seoTitle: null, seoDescription: null, shareImage: null, noindex: false }
 
 export const defaultSettings: SiteSettings = {
   name: 'Degas Concepts Limited',
@@ -47,6 +56,12 @@ export const defaultSettings: SiteSettings = {
   workingHours:
     'Mon–Fri, 9:00–18:00 WAT (UTC+1), with overlap for UK/EU and morning US hours',
   paymentOptions: 'Invoicing in USD, GBP, EUR or NGN; bank transfer, Wise or Payoneer',
+  address: '',
+  instagram: '',
+  xUrl: '',
+  facebook: '',
+  googleVerification: '',
+  bingVerification: '',
 }
 
 export const defaultTeam: TeamMember[] = [
@@ -80,7 +95,11 @@ export const defaultServices: Service[] = [
       'Design systems & component libraries',
       'Usability testing & iteration',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
   {
     id: 'web-development',
@@ -96,7 +115,11 @@ export const defaultServices: Service[] = [
       'API design & integration',
       'Performance & SEO optimization',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
   {
     id: 'wordpress-development',
@@ -112,7 +135,11 @@ export const defaultServices: Service[] = [
       'Content migration & setup',
       'Maintenance & security hardening',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
   {
     id: 'product-design',
@@ -128,7 +155,11 @@ export const defaultServices: Service[] = [
       'High-fidelity UI design',
       'Design handoff & QA',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
   {
     id: 'mobile-app-development',
@@ -144,7 +175,11 @@ export const defaultServices: Service[] = [
       'Push notifications & offline support',
       'App store deployment support',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
   {
     id: 'landing-pages',
@@ -160,7 +195,11 @@ export const defaultServices: Service[] = [
       'Analytics & tracking setup',
       'A/B test-ready layouts',
     ],
+    body: '',
+    audience: '',
+    faqs: [],
     published: true,
+    ...noSeo,
   },
 ]
 
@@ -208,8 +247,12 @@ const project = (
   highlights: [],
   servicesLabel: null,
   coverImage: null,
+  coverAlt: null,
+  results: null,
+  serviceIds: [],
   featured,
   published: true,
+  ...noSeo,
 })
 
 export const defaultProjects: Project[] = [

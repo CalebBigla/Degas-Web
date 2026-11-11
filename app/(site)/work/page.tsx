@@ -5,16 +5,25 @@ import { CtaBanner } from '@/components/cta-banner'
 import { getProjects } from '@/lib/content'
 import { Reveal } from '@/components/reveal'
 import { getPage } from '@/lib/pages/get'
+import { buildMetadata } from '@/lib/seo'
+import { BreadcrumbJsonLd } from '@/components/breadcrumb-json-ld'
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getPage('work')
-  return { title: copy['seo.title'], description: copy['seo.description'] }
+  return buildMetadata({
+    title: copy['seo.title'],
+    description: copy['seo.description'],
+    path: '/work',
+    noindex: copy['seo.noindex'],
+  })
 }
 
 export default async function WorkPage() {
+  const site = await getPage('site')
   const [projects, copy] = await Promise.all([getProjects(), getPage('work')])
   return (
     <>
+      <BreadcrumbJsonLd trail={[{ name: site['nav.work'], path: '/work' }]} />
       <PageHero
         eyebrow={copy['hero.eyebrow']}
         title={copy['hero.title']}

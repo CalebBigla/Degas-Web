@@ -5,6 +5,7 @@ import { Fragment, type ReactNode } from 'react'
  * Renders the small formatting syntax used in the admin's longer text fields:
  *
  *   Blank line        → new paragraph
+ *   "## " or "### "  → heading (when `headings` is on: articles, service pages)
  *   "- " at line start → bullet list
  *   **bold**          → bold
  *   [text](url)       → link (/path, https://, mailto: or tel: only)
@@ -56,7 +57,7 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
   return nodes
 }
 
-export function RichText({ text }: { text: string }) {
+export function RichText({ text, headings = false }: { text: string; headings?: boolean }) {
   const blocks = text
     .replace(/\r\n?/g, '\n')
     .split(/\n\s*\n/)
@@ -67,6 +68,11 @@ export function RichText({ text }: { text: string }) {
     <>
       {blocks.map((block, b) => {
         const lines = block.split('\n').map((line) => line.trim())
+        const heading = headings ? /^(#{2,3})\s+(.+)$/.exec(lines[0]!) : null
+        if (heading && lines.length === 1) {
+          const Tag = heading[1] === '##' ? 'h2' : 'h3'
+          return <Tag key={b}>{renderInline(heading[2]!, `${b}`)}</Tag>
+        }
         if (lines.every((line) => /^[-*]\s+/.test(line))) {
           return (
             <ul key={b}>

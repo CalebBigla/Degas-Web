@@ -7,11 +7,18 @@ import { CtaBanner } from '@/components/cta-banner'
 import { getCoreValues, getSettings, getTeam } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
 import { getPage } from '@/lib/pages/get'
+import { buildMetadata } from '@/lib/seo'
+import { BreadcrumbJsonLd } from '@/components/breadcrumb-json-ld'
 import { RichText } from '@/components/rich-text'
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getPage('about')
-  return { title: copy['seo.title'], description: copy['seo.description'] }
+  return buildMetadata({
+    title: copy['seo.title'],
+    description: copy['seo.description'],
+    path: '/about',
+    noindex: copy['seo.noindex'],
+  })
 }
 
 
@@ -25,6 +32,7 @@ function initials(name: string) {
 }
 
 export default async function AboutPage() {
+  const site = await getPage('site')
   const [company, coreValues, team, copy] = await Promise.all([
     getSettings(),
     getCoreValues(),
@@ -34,6 +42,7 @@ export default async function AboutPage() {
 
   return (
     <>
+      <BreadcrumbJsonLd trail={[{ name: site['nav.about'], path: '/about' }]} />
       <PageHero
         eyebrow={copy['hero.eyebrow']}
         title={copy['hero.title']}

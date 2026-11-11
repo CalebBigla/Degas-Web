@@ -1,21 +1,31 @@
 import type { Metadata } from 'next'
-import { Check } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, Check } from 'lucide-react'
 import { PageHero } from '@/components/page-hero'
 import { CtaBanner } from '@/components/cta-banner'
 import { getServices } from '@/lib/content'
 import { getIcon } from '@/lib/icons'
 import { Reveal } from '@/components/reveal'
 import { getPage } from '@/lib/pages/get'
+import { buildMetadata } from '@/lib/seo'
+import { BreadcrumbJsonLd } from '@/components/breadcrumb-json-ld'
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getPage('services')
-  return { title: copy['seo.title'], description: copy['seo.description'] }
+  return buildMetadata({
+    title: copy['seo.title'],
+    description: copy['seo.description'],
+    path: '/services',
+    noindex: copy['seo.noindex'],
+  })
 }
 
 export default async function ServicesPage() {
+  const site = await getPage('site')
   const [services, copy] = await Promise.all([getServices(), getPage('services')])
   return (
     <>
+      <BreadcrumbJsonLd trail={[{ name: site['nav.services'], path: '/services' }]} />
       <PageHero
         eyebrow={copy['hero.eyebrow']}
         title={copy['hero.title']}
@@ -45,6 +55,14 @@ export default async function ServicesPage() {
                 <p className="mt-3 text-base leading-relaxed text-muted-foreground">
                   {description}
                 </p>
+                <Link
+                  href={`/services/${slug}`}
+                  className="group mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent"
+                >
+                  {copy['list.learnMore']}
+                  <span className="sr-only">: {title}</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
               </div>
 
               <div className="lg:col-span-7">
