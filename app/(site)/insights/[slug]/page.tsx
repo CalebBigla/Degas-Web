@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { CtaBanner } from '@/components/cta-banner'
-import { Eyebrow } from '@/components/section-heading'
 import { RichText } from '@/components/rich-text'
 import { JsonLd } from '@/components/json-ld'
 import { proseClass } from '@/components/prose'
@@ -78,33 +77,23 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
       />
 
       <article>
-        <header className="border-b border-border bg-navy px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-          <div className="mx-auto max-w-3xl">
-            <Link
-              href="/insights"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-muted transition-colors hover:text-navy-foreground"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {copy['post.backLabel']}
-            </Link>
-            <div className="mt-6 flex flex-col gap-4">
-              <Eyebrow>{site['nav.insights']}</Eyebrow>
-              <h1 className="text-balance text-4xl font-bold text-navy-foreground sm:text-5xl">{post.title}</h1>
-              {post.excerpt && (
-                <p className="text-pretty text-lg leading-relaxed text-navy-muted">{post.excerpt}</p>
-              )}
-              <p className="text-sm text-navy-muted">
-                {post.author || settings.shortName}
-                {post.publishedAt && (
-                  <>
-                    {' · '}
-                    <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-        </header>
+        <PageHero
+          back={{ href: '/insights', label: copy['post.backLabel'] }}
+          eyebrow={site['nav.insights']}
+          title={post.title}
+          description={post.excerpt || undefined}
+          width="max-w-3xl"
+        >
+          <p className="text-sm text-navy-muted">
+            {post.author || settings.shortName}
+            {post.publishedAt && (
+              <>
+                {' · '}
+                <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+              </>
+            )}
+          </p>
+        </PageHero>
 
         {post.coverImage && (
           <div className="bg-background px-4 pt-12 sm:px-6 lg:px-8 lg:pt-16">

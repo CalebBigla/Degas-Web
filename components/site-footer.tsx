@@ -15,10 +15,8 @@ export async function SiteFooter({ links }: { links: NavLink[] }) {
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-5">
             <Link href="/" className="flex items-center gap-2.5" aria-label={`${company.name} home`}>
-              <Logo className="h-8 w-8 bg-white/10" />
-              <span className="font-heading text-lg font-bold tracking-tight">
-                {company.shortName}
-              </span>
+              {/* Monochrome (white) logo on the dark footer. */}
+              <Logo className="h-10 w-auto brightness-0 invert" />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-muted">
               {site['footer.blurb']}

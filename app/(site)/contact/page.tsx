@@ -121,7 +121,7 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6 lift-card">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
                 <p className="text-sm font-semibold text-foreground">{copy['location.title']}</p>
@@ -131,7 +131,7 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6 lift-card">
               <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
                 <p className="text-sm font-semibold text-foreground">{copy['hours.title']}</p>
@@ -141,7 +141,7 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-start gap-3 rounded-2xl border border-border bg-card p-6 lift-card">
               <Wallet className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div>
                 <p className="text-sm font-semibold text-foreground">{copy['payment.title']}</p>

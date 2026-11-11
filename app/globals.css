@@ -148,42 +148,48 @@
 :root {
   color-scheme: light;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.24 0.028 258);
+  --foreground: oklch(0.17 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.028 258);
+  --card-foreground: oklch(0.17 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.028 258);
-  --primary: oklch(0.27 0.045 260);
+  --popover-foreground: oklch(0.17 0 0);
+  --primary: oklch(0.17 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.968 0.005 258);
-  --secondary-foreground: oklch(0.27 0.045 260);
-  --muted: oklch(0.972 0.004 258);
-  --muted-foreground: oklch(0.5 0.02 258);
-  --accent: oklch(0.63 0.13 163);
+  --secondary: oklch(0.968 0 0);
+  --secondary-foreground: oklch(0.17 0 0);
+  --muted: oklch(0.972 0 0);
+  --muted-foreground: oklch(0.46 0 0);
+  --accent: oklch(0.5 0.2 266);
   --accent-foreground: oklch(0.99 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.918 0.006 258);
-  --input: oklch(0.918 0.006 258);
-  --ring: oklch(0.63 0.13 163);
-  --chart-1: oklch(0.63 0.13 163);
-  --chart-2: oklch(0.27 0.045 260);
-  --chart-3: oklch(0.5 0.02 258);
-  --chart-4: oklch(0.7 0.1 163);
-  --chart-5: oklch(0.4 0.04 260);
+  --border: oklch(0.918 0 0);
+  --input: oklch(0.918 0 0);
+  --ring: oklch(0.5 0.2 266);
+  --chart-1: oklch(0.5 0.2 266);
+  --chart-2: oklch(0.27 0 0);
+  --chart-3: oklch(0.5 0 0);
+  --chart-4: oklch(0.72 0.14 264);
+  --chart-5: oklch(0.4 0 0);
   --radius: 0.5rem;
 
-  --navy: oklch(0.22 0.035 260);
+  --navy: oklch(0.155 0 0);
   --navy-foreground: oklch(0.985 0 0);
-  --navy-muted: oklch(0.72 0.03 260);
+  --navy-muted: oklch(0.74 0 0);
+
+  /* Brand colours, straight from the logo. */
+  --brand-navy: #000066;
+  --brand-blue: #6699ff;
+  /* --accent is the brand blue deepened for legible text and white-on-blue
+     buttons on light backgrounds; dark sections switch to the logo blue. */
 
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.24 0.028 258);
-  --sidebar-primary: oklch(0.27 0.045 260);
+  --sidebar-foreground: oklch(0.24 0 0);
+  --sidebar-primary: oklch(0.27 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.968 0.005 258);
-  --sidebar-accent-foreground: oklch(0.27 0.045 260);
-  --sidebar-border: oklch(0.918 0.006 258);
-  --sidebar-ring: oklch(0.63 0.13 163);
+  --sidebar-accent: oklch(0.968 0 0);
+  --sidebar-accent-foreground: oklch(0.27 0 0);
+  --sidebar-border: oklch(0.918 0 0);
+  --sidebar-ring: oklch(0.5 0.2 266);
 }
 
 @layer base {
@@ -278,52 +284,52 @@
 }
 
 .admin-root {
-  --background: oklch(0.982 0.003 258);
+  --background: oklch(0.982 0 0);
   --card: oklch(1 0 0);
   --popover: oklch(1 0 0);
-  --secondary: oklch(0.962 0.006 258);
-  --muted: oklch(0.962 0.006 258);
-  --border: oklch(0.912 0.008 258);
-  --input: oklch(0.89 0.01 258);
-  --shimmer: oklch(0.93 0.008 258);
-  --shimmer-highlight: oklch(0.97 0.004 258);
+  --secondary: oklch(0.962 0 0);
+  --muted: oklch(0.962 0 0);
+  --border: oklch(0.912 0 0);
+  --input: oklch(0.89 0 0);
+  --shimmer: oklch(0.93 0 0);
+  --shimmer-highlight: oklch(0.97 0 0);
   color-scheme: light;
   font-family: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   letter-spacing: -0.006em;
 }
 
 .admin-root.dark {
-  --background: oklch(0.165 0.018 262);
-  --foreground: oklch(0.95 0.006 258);
-  --card: oklch(0.205 0.022 262);
-  --card-foreground: oklch(0.95 0.006 258);
-  --popover: oklch(0.225 0.024 262);
-  --popover-foreground: oklch(0.95 0.006 258);
-  --primary: oklch(0.95 0.006 258);
-  --primary-foreground: oklch(0.2 0.03 262);
-  --secondary: oklch(0.255 0.024 262);
-  --secondary-foreground: oklch(0.95 0.006 258);
-  --muted: oklch(0.255 0.024 262);
-  --muted-foreground: oklch(0.71 0.022 258);
-  --accent: oklch(0.72 0.14 163);
-  --accent-foreground: oklch(0.18 0.03 170);
+  --background: oklch(0.165 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.225 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+  --primary: oklch(0.95 0 0);
+  --primary-foreground: oklch(0.2 0 0);
+  --secondary: oklch(0.255 0 0);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.255 0 0);
+  --muted-foreground: oklch(0.71 0 0);
+  --accent: #6699ff;
+  --accent-foreground: #000066;
   --destructive: oklch(0.68 0.2 25);
-  --border: oklch(0.295 0.024 262);
-  --input: oklch(0.34 0.026 262);
-  --ring: oklch(0.72 0.14 163);
-  --navy: oklch(0.34 0.06 262);
+  --border: oklch(0.295 0 0);
+  --input: oklch(0.34 0 0);
+  --ring: #6699ff;
+  --navy: oklch(0.34 0 0);
   --navy-foreground: oklch(0.97 0 0);
-  --shimmer: oklch(0.25 0.022 262);
-  --shimmer-highlight: oklch(0.3 0.024 262);
+  --shimmer: oklch(0.25 0 0);
+  --shimmer-highlight: oklch(0.3 0 0);
   color-scheme: dark;
 }
 
 /* Page background behind the admin (also covers overscroll). */
 html:has(.admin-root) {
-  background: oklch(0.982 0.003 258);
+  background: oklch(0.982 0 0);
 }
 html:has(.admin-root.dark) {
-  background: oklch(0.165 0.018 262);
+  background: oklch(0.165 0 0);
   color-scheme: dark;
 }
 
@@ -384,7 +390,7 @@ html:has(.admin-root.dark) {
 }
 
 .admin-root dialog::backdrop {
-  background: color-mix(in oklch, oklch(0.15 0.03 262) 55%, transparent);
+  background: color-mix(in oklch, oklch(0.15 0 0) 55%, transparent);
   backdrop-filter: blur(3px);
   animation: var(--animate-overlay-in);
 }
@@ -416,4 +422,31 @@ body {
 [data-offscreen] *::before,
 [data-offscreen] *::after {
   animation-play-state: paused !important;
+}
+
+/* Dark (ink) sections: accents switch to the bright logo blue, with brand-navy
+   text on blue buttons. Applies to anything inside an element with bg-navy. */
+.bg-navy {
+  --accent: #6699ff;
+  --accent-foreground: #000066;
+  --ring: #6699ff;
+}
+
+/* Content cards: lift slightly with a soft brand-blue glow on hover. */
+.lift-card {
+  /* Includes the scroll-reveal fade (opacity/transform) so both work together. */
+  transition-property: opacity, transform, translate, box-shadow, border-color;
+  transition-duration: 500ms, 500ms, 300ms, 300ms, 300ms;
+  transition-timing-function: ease-out, ease-out, cubic-bezier(0.16, 1, 0.3, 1), ease, ease;
+  transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0ms, 0ms, 0ms;
+}
+.lift-card:hover {
+  translate: 0 -4px;
+  border-color: color-mix(in oklch, var(--brand-blue) 45%, var(--border));
+  box-shadow: 0 24px 48px -24px color-mix(in oklch, var(--brand-blue) 45%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lift-card:hover {
+    translate: none;
+  }
 }

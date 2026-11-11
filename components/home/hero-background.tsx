@@ -28,8 +28,26 @@ const BEAMS_Y = [
   { col: 28, delay: 2.8, duration: 8 },
 ]
 
-const GRID =
-  'linear-gradient(to right, var(--border) 1px, transparent 1px), linear-gradient(to bottom, var(--border) 1px, transparent 1px)'
+const GRID = {
+  light:
+    'linear-gradient(to right, var(--border) 1px, transparent 1px), linear-gradient(to bottom, var(--border) 1px, transparent 1px)',
+  dark:
+    'linear-gradient(to right, rgb(255 255 255 / 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.07) 1px, transparent 1px)',
+}
+
+// Drifting glows in the logo colours (stronger on dark backgrounds).
+const GLOWS = {
+  light: [
+    'radial-gradient(closest-side, color-mix(in oklch, var(--brand-blue) 34%, transparent), color-mix(in oklch, var(--brand-blue) 10%, transparent) 55%, transparent)',
+    'radial-gradient(closest-side, color-mix(in oklch, var(--brand-navy) 16%, transparent), color-mix(in oklch, var(--brand-navy) 5%, transparent) 55%, transparent)',
+    'radial-gradient(closest-side, color-mix(in oklch, var(--brand-blue) 22%, transparent), color-mix(in oklch, var(--brand-blue) 6%, transparent) 55%, transparent)',
+  ],
+  dark: [
+    'radial-gradient(closest-side, color-mix(in oklch, var(--brand-blue) 38%, transparent), color-mix(in oklch, var(--brand-blue) 10%, transparent) 55%, transparent)',
+    'radial-gradient(closest-side, color-mix(in oklch, #2a2aff 45%, transparent), color-mix(in oklch, var(--brand-navy) 25%, transparent) 55%, transparent)',
+    'radial-gradient(closest-side, color-mix(in oklch, var(--brand-blue) 22%, transparent), color-mix(in oklch, var(--brand-blue) 6%, transparent) 55%, transparent)',
+  ],
+}
 const GRID_ACCENT =
   'linear-gradient(to right, color-mix(in oklch, var(--accent) 45%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklch, var(--accent) 45%, transparent) 1px, transparent 1px)'
 
@@ -45,7 +63,7 @@ const GLOW = 840 // spotlight glow size (px)
  * repaints); the glows use soft gradients rather than a blur filter; and all
  * animations pause while the hero is off-screen or the tab is hidden.
  */
-export function HeroBackground() {
+export function HeroBackground({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
   const ref = useRef<HTMLDivElement>(null)
   const spotRef = useRef<HTMLDivElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
@@ -110,15 +128,15 @@ export function HeroBackground() {
   return (
     <div ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* Drifting colour glows (soft gradients: no blur filter, cheap to move) */}
-      <div className="absolute -left-[10%] -top-[30%] h-[70%] w-[55%] animate-aurora-a bg-[radial-gradient(closest-side,color-mix(in_oklch,var(--accent)_30%,transparent),color-mix(in_oklch,var(--accent)_10%,transparent)_55%,transparent)] will-change-transform" />
-      <div className="absolute -right-[12%] -top-[20%] h-[75%] w-[55%] animate-aurora-b bg-[radial-gradient(closest-side,oklch(0.62_0.14_262/0.24),oklch(0.62_0.14_262/0.08)_55%,transparent)] will-change-transform" />
-      <div className="absolute bottom-[-35%] left-[25%] h-[60%] w-[50%] animate-aurora-c bg-[radial-gradient(closest-side,oklch(0.75_0.1_200/0.18),oklch(0.75_0.1_200/0.06)_55%,transparent)] will-change-transform" />
+      <div className="absolute -left-[10%] -top-[30%] h-[70%] w-[55%] animate-aurora-a will-change-transform" style={{ background: GLOWS[tone][0] }} />
+      <div className="absolute -right-[12%] -top-[20%] h-[75%] w-[55%] animate-aurora-b will-change-transform" style={{ background: GLOWS[tone][1] }} />
+      <div className="absolute bottom-[-35%] left-[25%] h-[60%] w-[50%] animate-aurora-c will-change-transform" style={{ background: GLOWS[tone][2] }} />
 
       {/* Grid, faded towards the edges */}
       <div
-        className="absolute inset-0 opacity-50"
+        className={tone === 'light' ? 'absolute inset-0 opacity-50' : 'absolute inset-0'}
         style={{
-          backgroundImage: GRID,
+          backgroundImage: GRID[tone],
           backgroundSize: `${CELL}px ${CELL}px`,
           maskImage: 'radial-gradient(ellipse 75% 65% at 50% 0%, black 35%, transparent 100%)',
         }}
@@ -176,7 +194,9 @@ export function HeroBackground() {
       </div>
 
       {/* Soft fade into the content below */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      {tone === 'light' && (
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      )}
     </div>
   )
 }

@@ -40,7 +40,7 @@ export default async function ServicesPage() {
             <Reveal
               key={slug}
               id={slug}
-              className="grid scroll-mt-24 gap-8 rounded-2xl border border-border bg-card p-8 lg:grid-cols-12 lg:p-10"
+              className="grid scroll-mt-24 gap-8 rounded-2xl border border-border bg-card p-8 lg:grid-cols-12 lg:p-10 lift-card"
             >
               <div className="lg:col-span-5">
                 <div className="flex items-center gap-4">

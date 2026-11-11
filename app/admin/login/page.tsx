@@ -33,18 +33,18 @@ export default async function LoginPage({
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       {/* Brand panel */}
-      <aside className="relative hidden overflow-hidden bg-[oklch(0.19_0.04_262)] p-12 text-white lg:flex lg:flex-col">
+      <aside className="relative hidden overflow-hidden bg-[#0e0e0e] p-12 text-white lg:flex lg:flex-col">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 [background-image:linear-gradient(to_right,rgb(255_255_255/0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.06)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(ellipse_at_30%_40%,black,transparent_75%)]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-[oklch(0.63_0.13_163)] opacity-25 blur-[120px] motion-safe:animate-pulse"
+          className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-[#6699ff] opacity-25 blur-[120px] motion-safe:animate-pulse"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[oklch(0.55_0.15_262)] opacity-30 blur-[100px]"
+          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#000066] opacity-30 blur-[100px]"
         />
 
         <Image
@@ -57,7 +57,7 @@ export default async function LoginPage({
         />
 
         <div className="relative mt-auto max-w-md">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-[oklch(0.78_0.12_163)]">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#6699ff]">
             Content studio
           </p>
           <h2 className="mt-4 text-4xl font-semibold leading-[1.1] tracking-tight">
@@ -71,7 +71,7 @@ export default async function LoginPage({
                 style={{ animationDelay: `${200 + i * 90}ms` }}
               >
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 backdrop-blur">
-                  <Icon className="h-4 w-4 text-[oklch(0.78_0.12_163)]" />
+                  <Icon className="h-4 w-4 text-[#6699ff]" />
                 </span>
                 {text}
               </li>

@@ -20,7 +20,7 @@ export function HowWeWork({ copy }: { copy: PageContent<'home'> }) {
               as="li"
               key={step}
               delay={index * 80}
-              className="relative flex flex-col gap-3 rounded-xl border border-border bg-card p-7"
+              className="relative flex flex-col gap-3 rounded-xl border border-border bg-card p-7 lift-card"
             >
               <span className="font-heading text-4xl font-bold text-accent/25">
                 {step}

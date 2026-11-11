@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, ArrowRight, Check, ChevronDown } from 'lucide-react'
+import { ArrowRight, Check, ChevronDown } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
+import { ButtonLink } from '@/components/button-link'
 import { CtaBanner } from '@/components/cta-banner'
-import { Eyebrow } from '@/components/section-heading'
 import { ProjectCard } from '@/components/project-card'
 import { RichText } from '@/components/rich-text'
 import { JsonLd } from '@/components/json-ld'
@@ -81,40 +82,18 @@ export default async function ServiceDetailPage({
         )}
       />
 
-      <section className="border-b border-border bg-navy px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="mx-auto max-w-4xl">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-muted transition-colors hover:text-navy-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {copy['detail.backLabel']}
-          </Link>
-          <div className="mt-6 flex flex-col gap-4">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-accent">
-                <Icon className="h-5 w-5" />
-              </span>
-              <Eyebrow>{site['nav.services']}</Eyebrow>
-            </div>
-            <h1 className="text-balance text-4xl font-bold text-navy-foreground sm:text-5xl">
-              {service.title}
-            </h1>
-            <p className="max-w-2xl text-pretty text-lg leading-relaxed text-navy-muted">
-              {service.description}
-            </p>
-            <div>
-              <Link
-                href="/contact"
-                className="mt-2 inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
-              >
-                {copy['detail.ctaLabel']}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        back={{ href: '/services', label: copy['detail.backLabel'] }}
+        icon={<Icon className="h-5 w-5" />}
+        eyebrow={site['nav.services']}
+        title={service.title}
+        description={service.description}
+      >
+        <ButtonLink href="/contact" variant="primary" className="mt-2">
+          {copy['detail.ctaLabel']}
+          <ArrowRight className="h-4 w-4" />
+        </ButtonLink>
+      </PageHero>
 
       <section className="bg-background px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-12">
@@ -139,7 +118,7 @@ export default async function ServiceDetailPage({
                 <h2 className="text-2xl font-bold text-foreground">{copy['list.includedLabel']}</h2>
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {service.included.map((item) => (
-                    <li key={item} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
+                    <li key={item} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 lift-card">
                       <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
                         <Check className="h-3 w-3" />
                       </span>

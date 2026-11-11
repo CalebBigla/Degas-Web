@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Check } from 'lucide-react'
+import { Check } from 'lucide-react'
+import { PageHero } from '@/components/page-hero'
 import { CtaBanner } from '@/components/cta-banner'
-import { Eyebrow } from '@/components/section-heading'
 import { getPage } from '@/lib/pages/get'
 import { getProjectBySlug, getProjects, getServices, getSettings } from '@/lib/content'
 import { RichText } from '@/components/rich-text'
@@ -73,26 +73,12 @@ export default async function CaseStudyPage({
           caseStudySchema(project, project.seoDescription || snippet(project.description)),
         )}
       />
-      <section className="border-b border-border bg-navy px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="mx-auto max-w-4xl">
-          <Link
-            href="/work"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-muted transition-colors hover:text-navy-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {copy['case.backLabel']}
-          </Link>
-          <div className="mt-6 flex flex-col gap-4">
-            <Eyebrow>{project.category}</Eyebrow>
-            <h1 className="text-balance text-4xl font-bold text-navy-foreground sm:text-5xl">
-              {project.title}
-            </h1>
-            <p className="max-w-2xl text-pretty text-lg leading-relaxed text-navy-muted">
-              {project.description}
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHero
+        back={{ href: '/work', label: copy['case.backLabel'] }}
+        eyebrow={project.category}
+        title={project.title}
+        description={project.description}
+      />
 
       {project.coverImage && (
         <div className="bg-background px-4 pt-12 sm:px-6 lg:px-8 lg:pt-16">

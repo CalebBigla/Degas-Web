@@ -20,7 +20,7 @@ export async function WhyChoose({ copy }: { copy: PageContent<'home'> }) {
             return (
             <div
               key={id}
-              className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8"
+              className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8 lift-card"
             >
               <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
                 <Icon className="h-6 w-6" />

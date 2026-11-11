@@ -64,7 +64,7 @@ export default async function AboutPage() {
       {/* Vision & Mission */}
       <section className="border-y border-border bg-secondary px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">
-          <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-9">
+          <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-9 lift-card">
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
               <Eye className="h-6 w-6" />
             </span>
@@ -73,7 +73,7 @@ export default async function AboutPage() {
               {company.vision}
             </p>
           </div>
-          <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-9">
+          <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-9 lift-card">
             <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-navy text-navy-foreground">
               <Target className="h-6 w-6" />
             </span>
@@ -99,7 +99,7 @@ export default async function AboutPage() {
               return (
               <div
                 key={id}
-                className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8"
+                className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8 lift-card"
               >
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
                   <Icon className="h-6 w-6" />
@@ -127,7 +127,7 @@ export default async function AboutPage() {
             {team.map((member) => (
               <div
                 key={member.id}
-                className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8"
+                className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8 lift-card"
               >
                 <div className="relative h-14 w-14 overflow-hidden rounded-full">
                   {member.image ? (

@@ -1,9 +1,9 @@
 import { ImageResponse } from 'next/og'
 
-// Colours mirror the design tokens in app/globals.css (navy, navy-muted, accent).
-const navy = '#111b2b'
-const navyMuted = '#9aa5b8'
-const accent = '#1ba172'
+// Colours mirror app/globals.css: ink background, grey text, logo blue accent.
+const navy = '#0e0e0e'
+const navyMuted = '#a3a3a3'
+const accent = '#6699ff'
 
 export const OG_SIZE = { width: 1200, height: 630 }
 

@@ -1,32 +1,14 @@
 import { ArrowRight, ShieldCheck, Award, FolderCheck } from 'lucide-react'
 import { ButtonLink } from '@/components/button-link'
 import { HeroBackground } from '@/components/home/hero-background'
+import { AnimatedHeadline, headlineDoneMs } from '@/components/animated-headline'
 import type { PageContent } from '@/lib/pages/definitions'
 
 const BADGE_ICONS = [ShieldCheck, Award, FolderCheck]
 
-const WORD_START_MS = 150
-const WORD_STEP_MS = 70
-
-/** Split "Simplify the **tech space**" into words, flagging the highlighted ones. */
-function parseHeadline(title: string) {
-  const words: { text: string; highlight: boolean }[] = []
-  title.split(/(\*\*[^*]+\*\*)/g).forEach((part) => {
-    const highlight = part.startsWith('**') && part.endsWith('**')
-    const text = highlight ? part.slice(2, -2) : part
-    text
-      .split(/\s+/)
-      .filter(Boolean)
-      .forEach((word) => words.push({ text: word, highlight }))
-  })
-  return words
-}
-
 export function Hero({ copy }: { copy: PageContent<'home'> }) {
-  const words = parseHeadline(copy['hero.title'])
-  const plainTitle = words.map((w) => w.text).join(' ')
   // The rest of the hero follows once the headline has landed.
-  const after = WORD_START_MS + words.length * WORD_STEP_MS + 150
+  const after = headlineDoneMs(copy['hero.title'])
   const badges = copy['hero.badges'].map((label, index) => ({
     icon: BADGE_ICONS[index % BADGE_ICONS.length]!,
     label,
@@ -45,28 +27,10 @@ export function Hero({ copy }: { copy: PageContent<'home'> }) {
           {copy['hero.eyebrow']}
         </span>
 
-        <h1
-          aria-label={plainTitle}
-          className="mt-6 text-balance text-4xl font-bold leading-[1.08] text-foreground [perspective:800px] sm:text-5xl lg:text-6xl"
-        >
-          {words.map((word, i) => (
-            <span key={i} aria-hidden="true">
-              <span
-                className="inline-block origin-bottom animate-word-in motion-reduce:animate-none"
-                style={{ animationDelay: `${WORD_START_MS + i * WORD_STEP_MS}ms` }}
-              >
-                {word.highlight ? (
-                  <span className="animate-gradient-pan bg-[linear-gradient(90deg,var(--accent),oklch(0.55_0.15_262),var(--accent))] bg-[length:200%_auto] bg-clip-text pb-1 text-transparent motion-reduce:animate-none">
-                    {word.text}
-                  </span>
-                ) : (
-                  word.text
-                )}
-              </span>
-              {i < words.length - 1 && ' '}
-            </span>
-          ))}
-        </h1>
+        <AnimatedHeadline
+          title={copy['hero.title']}
+          className="mt-6 text-balance text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl lg:text-6xl"
+        />
 
         <p
           className="mt-6 max-w-2xl animate-fade-up text-pretty text-lg leading-relaxed text-muted-foreground motion-reduce:animate-none"
