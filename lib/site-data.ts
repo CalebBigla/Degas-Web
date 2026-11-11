@@ -21,7 +21,7 @@ import type {
  * The live site's preferred address (canonical URLs, sitemap, structured data).
  * Set NEXT_PUBLIC_SITE_URL to override, e.g. for a staging domain.
  */
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://degasconcepts.com').replace(/\/+$/, '')
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.degasconcepts.com').replace(/\/+$/, '')
 
 /** Site navigation. Labels are editable in the admin (Pages → Header & footer). */
 export const navLinks = [

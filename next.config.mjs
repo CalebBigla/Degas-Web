@@ -1,5 +1,5 @@
 // The preferred address of the live site (see lib/site-data.ts).
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://degasconcepts.com').replace(/\/+$/, '')
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.degasconcepts.com').replace(/\/+$/, '')
 const siteHost = new URL(SITE_URL).hostname
 
 /** @type {import('next').NextConfig} */
