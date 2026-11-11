@@ -7,6 +7,7 @@ import { Menu, X, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NavLink } from '@/lib/site-data'
 import { Logo } from '@/components/logo'
+import { LanguageSwitcher } from '@/components/language-switcher'
 
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background'
@@ -109,6 +110,7 @@ export function SiteHeader({
         </nav>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <Link
             href="/contact"
             className={cn(

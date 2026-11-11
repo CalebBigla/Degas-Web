@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-manrope), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
 
   --color-sidebar-ring: var(--sidebar-ring);
@@ -387,4 +387,26 @@ html:has(.admin-root.dark) {
   background: color-mix(in oklch, oklch(0.15 0.03 262) 55%, transparent);
   backdrop-filter: blur(3px);
   animation: var(--animate-overlay-in);
+}
+
+/* Google website translator: keep its engine, hide its UI (we use our own picker). */
+#google_translate_element,
+iframe.skiptranslate,
+.skiptranslate > iframe,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+.goog-tooltip,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-yAWNEb-L7lbkb {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+.VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q,
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
 }

@@ -1,18 +1,12 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, Manrope } from 'next/font/google'
+import { Sora } from 'next/font/google'
 import { siteUrl } from '@/lib/site-data'
 import './globals.css'
 
-const inter = Inter({
+const sora = Sora({
   subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  variable: '--font-manrope',
+  variable: '--font-sora',
   display: 'swap',
 })
 
@@ -60,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${manrope.variable} bg-background`}>
+    <html lang="en" className={`${sora.variable} bg-background`}>
       <body className="font-sans antialiased">
         <noscript>
           <style>{`[data-reveal='hidden']{opacity:1!important;transform:none!important}`}</style>
