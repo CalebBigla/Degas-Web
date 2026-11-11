@@ -1,6 +1,7 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
+import { CONTENT_TAG } from '@/lib/content'
 import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/admin/auth'
 import { isSupabaseConfigured } from '@/lib/supabase/config'
@@ -37,6 +38,7 @@ function assertListTable(table: string): asserts table is ListTable {
 
 /** Refresh every public page (and the admin) after content changes. */
 function refreshSite() {
+  updateTag(CONTENT_TAG)
   revalidatePath('/', 'layout')
 }
 

@@ -410,3 +410,10 @@ body {
   background: none !important;
   box-shadow: none !important;
 }
+
+/* Animations inside an element marked data-offscreen (scrolled out of view) are paused. */
+[data-offscreen] *,
+[data-offscreen] *::before,
+[data-offscreen] *::after {
+  animation-play-state: paused !important;
+}

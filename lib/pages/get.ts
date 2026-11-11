@@ -1,5 +1,6 @@
 import { cache } from 'react'
-import { getSettings } from '@/lib/content'
+import { unstable_cache } from 'next/cache'
+import { CONTENT_TAG, getSettings } from '@/lib/content'
 import type { SiteSettings } from '@/lib/content-types'
 import { isSupabaseConfigured } from '@/lib/supabase/config'
 import { createSupabasePublicClient } from '@/lib/supabase/server'
@@ -11,32 +12,6 @@ import {
   type PageSlug,
   type PageValue,
 } from '@/lib/pages/definitions'
-
-/** Saved content for one page (raw, before defaults or placeholders). */
-export async function loadStoredPage(
-  slug: PageSlug,
-  client?: ReturnType<typeof createSupabasePublicClient>,
-): Promise<Record<string, unknown>> {
-  if (!isSupabaseConfigured) return {}
-  try {
-    const { data, error } = await (client ?? createSupabasePublicClient())
-      .from('pages')
-      .select('content')
-      .eq('slug', slug)
-      .maybeSingle()
-    if (error) {
-      console.error(`[content] Could not load page "${slug}":`, error.message)
-      return {}
-    }
-    const content = data?.content
-    return content && typeof content === 'object' && !Array.isArray(content)
-      ? (content as Record<string, unknown>)
-      : {}
-  } catch (error) {
-    console.error(`[content] Could not load page "${slug}":`, (error as Error).message)
-    return {}
-  }
-}
 
 /** Saved values merged over the defaults, without placeholders filled in. */
 export function mergeWithDefaults<S extends PageSlug>(
@@ -78,8 +53,36 @@ function fillValue(value: PageValue, settings: SiteSettings): PageValue {
  * Page copy for the public site: saved content over the defaults, with
  * {company}, {rc_number} and the other placeholders filled in.
  */
+/** Saved page copy, shared across requests (cleared when the admin saves). */
+const cachedStoredPage = unstable_cache(
+  async (slug: PageSlug) => {
+    if (!isSupabaseConfigured) return {}
+    const { data, error } = await createSupabasePublicClient()
+      .from('pages')
+      .select('content')
+      .eq('slug', slug)
+      .maybeSingle()
+    if (error) throw new Error(error.message)
+    const content = data?.content
+    return content && typeof content === 'object' && !Array.isArray(content)
+      ? (content as Record<string, unknown>)
+      : {}
+  },
+  ['content', 'pages'],
+  { tags: [CONTENT_TAG], revalidate: 3600 },
+)
+
+async function storedPage(slug: PageSlug) {
+  try {
+    return await cachedStoredPage(slug)
+  } catch (error) {
+    console.error(`[content] Could not load page "${slug}":`, (error as Error).message)
+    return {}
+  }
+}
+
 export const getPage = cache(async <S extends PageSlug>(slug: S): Promise<PageContent<S>> => {
-  const [stored, settings] = await Promise.all([loadStoredPage(slug), getSettings()])
+  const [stored, settings] = await Promise.all([storedPage(slug), getSettings()])
   const merged = mergeWithDefaults(slug, stored) as Record<string, PageValue>
   return Object.fromEntries(
     Object.entries(merged).map(([key, value]) => [key, fillValue(value, settings)]),

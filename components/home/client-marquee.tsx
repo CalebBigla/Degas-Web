@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { PauseOffscreen } from '@/components/pause-offscreen'
 import { getClients } from '@/lib/content'
 import type { Client } from '@/lib/content-types'
 
@@ -12,8 +13,7 @@ function ClientLogo({ client }: { client: Client }) {
         width={200}
         height={64}
         sizes="200px"
-        // multiply: white logo backgrounds disappear into the page.
-        className="h-12 w-auto max-w-[180px] object-contain opacity-70 mix-blend-multiply grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0 sm:h-14 sm:max-w-[200px]"
+        className="h-12 w-auto max-w-[180px] object-contain opacity-70 grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0 sm:h-14 sm:max-w-[200px]"
       />
     )
   }
@@ -55,6 +55,7 @@ export async function ClientMarquee({ heading }: { heading: string }) {
 
   return (
     <section className="border-b border-border bg-background py-12">
+      <PauseOffscreen />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           {heading}
@@ -66,7 +67,7 @@ export async function ClientMarquee({ heading }: { heading: string }) {
       >
         {/* Two identical groups; the track slides -50% so the loop is seamless. Pauses on hover. */}
         <div
-          className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:animate-none"
+          className="flex w-max animate-marquee will-change-transform group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:animate-none"
           style={{ '--marquee-duration': `${Math.max(clients.length * 5, 35)}s` } as React.CSSProperties}
         >
           <LogoGroup clients={clients} />

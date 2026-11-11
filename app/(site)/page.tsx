@@ -6,8 +6,14 @@ import { HowWeWork } from '@/components/home/how-we-work'
 import { FeaturedWork } from '@/components/home/featured-work'
 import { CtaBanner } from '@/components/cta-banner'
 import { getPage } from '@/lib/pages/get'
+import { getClients, getCoreValues, getFeaturedProjects, getServices } from '@/lib/content'
 
 export default async function HomePage() {
+  // Start every query at once instead of after the page copy has loaded.
+  void getClients()
+  void getServices()
+  void getCoreValues()
+  void getFeaturedProjects()
   const copy = await getPage('home')
   return (
     <>
