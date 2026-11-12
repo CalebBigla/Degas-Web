@@ -156,13 +156,26 @@ const postsQuery = cachedQuery('posts', async () => {
   return (data ?? []) as Record<string, unknown>[]
 })
 
+let warnedMissingPosts = false
+
 /** Published articles, newest first. Empty until the posts table exists. */
 export const getPosts = cache(async (): Promise<WithMeta<Post>[]> => {
   if (!isSupabaseConfigured) return []
   try {
     return (await postsQuery()).map(mapPost)
   } catch (error) {
-    console.error('[content] Failed to load posts:', (error as Error).message)
+    const message = (error as Error).message
+    if (message.includes("'public.posts'")) {
+      // The database update hasn't been run yet: say how to fix it, once.
+      if (!warnedMissingPosts) {
+        warnedMissingPosts = true
+        console.warn(
+          '[content] The Insights table does not exist yet. Run supabase/schema.sql in the Supabase SQL Editor to add it.',
+        )
+      }
+    } else {
+      console.error('[content] Failed to load posts:', message)
+    }
     return []
   }
 })
