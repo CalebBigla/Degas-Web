@@ -104,6 +104,12 @@
   --animate-aurora-b: aurora-b 28s ease-in-out infinite alternate;
   --animate-aurora-c: aurora-c 34s ease-in-out infinite alternate;
   --animate-node-pulse: node-pulse 4s ease-in-out infinite;
+  /* The grid flows up one cell (56px) per loop; nodes riding on it fade out
+     exactly when the loop restarts, so the reset is invisible. */
+  --animate-grid-flow: grid-flow 4s linear infinite;
+  --animate-node-flow-a: node-flow-a 4s ease-in-out infinite;
+  --animate-node-flow-b: node-flow-b 4s ease-in-out infinite;
+  --animate-node-flow-c: node-flow-c 4s ease-in-out infinite;
 
   @keyframes word-in {
     from {
@@ -141,6 +147,24 @@
   @keyframes aurora-c {
     from { transform: translate3d(0, 12%, 0) scale(0.9); }
     to { transform: translate3d(8%, -14%, 0) scale(1.2); }
+  }
+  @keyframes grid-flow {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, -56px, 0); }
+  }
+  @keyframes node-flow-a {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    30% { opacity: 0.95; transform: scale(1); }
+    60% { opacity: 0.2; transform: scale(0.7); }
+  }
+  @keyframes node-flow-b {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.9; transform: scale(1); }
+  }
+  @keyframes node-flow-c {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    40% { opacity: 0.25; transform: scale(0.7); }
+    72% { opacity: 0.95; transform: scale(1); }
   }
   @keyframes node-pulse {
     0%, 100% { opacity: 0.15; transform: scale(0.6); }
