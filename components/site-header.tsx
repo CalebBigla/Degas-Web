@@ -114,7 +114,7 @@ export function SiteHeader({
           <Link
             href="/contact"
             className={cn(
-              'group hidden items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 md:inline-flex',
+              'group hidden items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:bg-accent-hover md:inline-flex',
               focusRing,
             )}
           >

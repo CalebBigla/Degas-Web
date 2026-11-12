@@ -22,7 +22,7 @@ export async function WhyChoose({ copy }: { copy: PageContent<'home'> }) {
               key={id}
               className="flex flex-col gap-4 rounded-xl border border-border bg-card p-8 lift-card"
             >
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent-soft text-accent">
                 <Icon className="h-6 w-6" />
               </span>
               <h3 className="text-xl font-semibold text-foreground">{title}</h3>

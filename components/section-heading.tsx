@@ -15,7 +15,7 @@ export function Eyebrow({
         className,
       )}
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+      <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-blue)]" aria-hidden="true" />
       {children}
     </span>
   )

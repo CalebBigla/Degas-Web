@@ -6,7 +6,8 @@ const base =
   'inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold transition-[translate,scale,box-shadow,background-color,opacity] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] active:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 [&>svg]:transition-transform [&>svg]:duration-200 hover:[&>svg]:translate-x-0.5'
 
 const variants = {
-  primary: 'bg-accent text-accent-foreground hover:opacity-90',
+  primary:
+    'bg-accent text-accent-foreground hover:bg-accent-hover hover:shadow-[0_10px_28px_-10px_color-mix(in_oklch,var(--brand-blue)_75%,transparent)]',
   navy: 'bg-navy text-navy-foreground hover:bg-navy/90',
   outline:
     'border border-border bg-background text-foreground hover:bg-secondary',

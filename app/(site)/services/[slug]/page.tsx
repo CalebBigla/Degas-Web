@@ -119,7 +119,7 @@ export default async function ServiceDetailPage({
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {service.included.map((item) => (
                     <li key={item} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 lift-card">
-                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
                         <Check className="h-3 w-3" />
                       </span>
                       <span className="text-sm leading-relaxed text-foreground">{item}</span>
@@ -156,7 +156,7 @@ export default async function ServiceDetailPage({
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{copy['cta.description']}</p>
                 <Link
                   href="/contact"
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:bg-accent-hover"
                 >
                   {copy['detail.ctaLabel']}
                 </Link>

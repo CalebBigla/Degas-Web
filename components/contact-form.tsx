@@ -26,7 +26,7 @@ function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: st
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className="group inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-[translate,scale,box-shadow,opacity] duration-200 ease-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98] active:shadow-sm disabled:pointer-events-none disabled:opacity-60"
+      className="group inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition-[translate,scale,box-shadow,opacity] duration-200 ease-out hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98] active:shadow-sm disabled:pointer-events-none disabled:opacity-60"
     >
       {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
       {pending ? pendingLabel : label}
@@ -47,9 +47,9 @@ export function ContactForm({ copy }: { copy: ContactFormCopy }) {
     return (
       <div
         role="status"
-        className="flex animate-pop-in flex-col items-start gap-3 rounded-xl border border-accent/30 bg-accent/5 p-8 motion-reduce:animate-none"
+        className="flex animate-pop-in flex-col items-start gap-3 rounded-xl border border-accent/30 bg-accent-soft/60 p-8 motion-reduce:animate-none"
       >
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent">
+        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft text-accent">
           <CheckCircle2 className="h-6 w-6" />
         </span>
         <h3 className="text-lg font-semibold text-foreground">{copy.successTitle}</h3>

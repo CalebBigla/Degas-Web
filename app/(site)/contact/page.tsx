@@ -94,7 +94,7 @@ export default async function ContactPage() {
                         : {})}
                       className="flex items-start gap-3.5 rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent/40"
                     >
-                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                         <Icon className="h-5 w-5" />
                       </span>
                       <span className="flex flex-col">
@@ -111,7 +111,7 @@ export default async function ContactPage() {
               </ul>
             </div>
 
-            <div className="flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent/5 p-6">
+            <div className="flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent-soft/60 p-6">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <div>
                 <p className="text-sm font-semibold text-foreground">{copy['trust.title']}</p>

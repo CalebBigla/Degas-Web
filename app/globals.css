@@ -8,6 +8,9 @@
   --font-heading: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
 
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-hover: var(--accent-hover);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -159,13 +162,16 @@
   --secondary-foreground: oklch(0.17 0 0);
   --muted: oklch(0.972 0 0);
   --muted-foreground: oklch(0.46 0 0);
-  --accent: oklch(0.5 0.2 266);
+  /* Actions use the logo navy; tints and highlights use the logo blue. */
+  --accent: var(--brand-navy);
   --accent-foreground: oklch(0.99 0 0);
+  --accent-hover: #1a1aa3;
+  --accent-soft: color-mix(in oklch, var(--brand-blue) 15%, white);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.918 0 0);
   --input: oklch(0.918 0 0);
-  --ring: oklch(0.5 0.2 266);
-  --chart-1: oklch(0.5 0.2 266);
+  --ring: oklch(0.55 0.19 266);
+  --chart-1: var(--brand-navy);
   --chart-2: oklch(0.27 0 0);
   --chart-3: oklch(0.5 0 0);
   --chart-4: oklch(0.72 0.14 264);
@@ -179,8 +185,6 @@
   /* Brand colours, straight from the logo. */
   --brand-navy: #000066;
   --brand-blue: #6699ff;
-  /* --accent is the brand blue deepened for legible text and white-on-blue
-     buttons on light backgrounds; dark sections switch to the logo blue. */
 
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.24 0 0);
@@ -189,7 +193,7 @@
   --sidebar-accent: oklch(0.968 0 0);
   --sidebar-accent-foreground: oklch(0.27 0 0);
   --sidebar-border: oklch(0.918 0 0);
-  --sidebar-ring: oklch(0.5 0.2 266);
+  --sidebar-ring: oklch(0.55 0.19 266);
 }
 
 @layer base {
@@ -427,9 +431,30 @@ body {
 /* Dark (ink) sections: accents switch to the bright logo blue, with brand-navy
    text on blue buttons. Applies to anything inside an element with bg-navy. */
 .bg-navy {
-  --accent: #6699ff;
-  --accent-foreground: #000066;
-  --ring: #6699ff;
+  --accent: var(--brand-blue);
+  --accent-foreground: var(--brand-navy);
+  --accent-hover: #85adff;
+  --accent-soft: color-mix(in oklch, var(--brand-blue) 16%, transparent);
+  --ring: var(--brand-blue);
+}
+
+/*
+ * Accent switch: <html data-accent="green"> (app/layout.tsx) swaps the whole
+ * site back to the original green, including glows and gradients.
+ */
+[data-accent='green'] {
+  --brand-blue: oklch(0.72 0.14 163);
+  --brand-navy: oklch(0.42 0.09 166);
+  --accent: oklch(0.6 0.13 163);
+  --accent-hover: oklch(0.55 0.13 163);
+  --accent-soft: color-mix(in oklch, oklch(0.63 0.13 163) 12%, white);
+  --ring: oklch(0.6 0.13 163);
+}
+[data-accent='green'] .bg-navy {
+  --accent: oklch(0.74 0.14 163);
+  --accent-foreground: oklch(0.18 0.03 170);
+  --accent-hover: oklch(0.8 0.12 163);
+  --accent-soft: color-mix(in oklch, oklch(0.74 0.14 163) 16%, transparent);
 }
 
 /* Content cards: lift slightly with a soft brand-blue glow on hover. */

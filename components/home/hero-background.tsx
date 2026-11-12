@@ -49,7 +49,7 @@ const GLOWS = {
   ],
 }
 const GRID_ACCENT =
-  'linear-gradient(to right, color-mix(in oklch, var(--accent) 45%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklch, var(--accent) 45%, transparent) 1px, transparent 1px)'
+  'linear-gradient(to right, color-mix(in oklch, var(--brand-blue) 55%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklch, var(--brand-blue) 55%, transparent) 1px, transparent 1px)'
 
 const SPOT = 520 // spotlight grid size (px)
 const GLOW = 840 // spotlight glow size (px)
@@ -150,7 +150,7 @@ export function HeroBackground({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
           width: GLOW,
           height: GLOW,
           background:
-            'radial-gradient(closest-side, color-mix(in oklch, var(--accent) 9%, transparent), transparent)',
+            'radial-gradient(closest-side, color-mix(in oklch, var(--brand-blue) 12%, transparent), transparent)',
         }}
       />
       <div
@@ -173,21 +173,21 @@ export function HeroBackground({ tone = 'light' }: { tone?: 'light' | 'dark' }) 
         {BEAMS_X.map((beam, i) => (
           <span
             key={`x${i}`}
-            className="absolute left-0 h-px w-40 animate-beam-x bg-gradient-to-r from-transparent via-accent to-transparent"
+            className="absolute left-0 h-px w-40 animate-beam-x bg-gradient-to-r from-transparent via-[var(--brand-blue)] to-transparent"
             style={{ top: beam.row * CELL, animationDelay: `${beam.delay}s`, animationDuration: `${beam.duration}s` }}
           />
         ))}
         {BEAMS_Y.map((beam, i) => (
           <span
             key={`y${i}`}
-            className="absolute top-0 h-32 w-px animate-beam-y bg-gradient-to-b from-transparent via-accent to-transparent"
+            className="absolute top-0 h-32 w-px animate-beam-y bg-gradient-to-b from-transparent via-[var(--brand-blue)] to-transparent"
             style={{ left: beam.col * CELL, animationDelay: `${beam.delay}s`, animationDuration: `${beam.duration}s` }}
           />
         ))}
         {NODES.map((node, i) => (
           <span
             key={i}
-            className="absolute h-1.5 w-1.5 animate-node-pulse rounded-full bg-accent shadow-[0_0_12px_2px_color-mix(in_oklch,var(--accent)_60%,transparent)]"
+            className="absolute h-1.5 w-1.5 animate-node-pulse rounded-full bg-[var(--brand-blue)] shadow-[0_0_12px_2px_color-mix(in_oklch,var(--brand-blue)_60%,transparent)]"
             style={{ left: node.x * CELL - 3, top: node.y * CELL - 3, animationDelay: `${node.delay}s` }}
           />
         ))}

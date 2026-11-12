@@ -191,7 +191,7 @@ function LanguagePrompt({
         <X className="h-4 w-4" />
       </button>
       <div className="flex items-start gap-3 pr-6">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
           <Languages className="h-4.5 w-4.5" />
         </span>
         <p className="pt-1.5 text-sm font-medium text-foreground">{language.prompt.question}</p>
@@ -200,7 +200,7 @@ function LanguagePrompt({
         <button
           type="button"
           onClick={onAccept}
-          className={cn('flex-1 rounded-md bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90', focusRing)}
+          className={cn('flex-1 rounded-md bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:bg-accent-hover', focusRing)}
         >
           {language.prompt.yes}
         </button>

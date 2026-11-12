@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} bg-background`}>
+    <html lang="en" data-accent="blue" className={`${sora.variable} bg-background`}>
       <body className="font-sans antialiased">
         <noscript>
           <style>{`[data-reveal='hidden']{opacity:1!important;transform:none!important}`}</style>

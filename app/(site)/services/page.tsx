@@ -72,7 +72,7 @@ export default async function ServicesPage() {
                 <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                   {included.map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
                         <Check className="h-3 w-3" />
                       </span>
                       <span className="text-sm leading-relaxed text-foreground">{item}</span>
