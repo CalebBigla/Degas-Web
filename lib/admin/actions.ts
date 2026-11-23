@@ -50,6 +50,14 @@ function dbFailure(error: DbError, formData: FormData, slugField = false): FormS
     return invalid({ slug: 'This URL slug is already used. Choose another one.' }, formData)
   }
   console.error('[admin] Database error:', error?.message)
+  // Missing column/table: the code is newer than the database.
+  if (error?.code === 'PGRST204' || error?.code === 'PGRST205' || error?.code === '42703') {
+    return {
+      message:
+        'The database needs an update before this can be saved. In Supabase, open SQL Editor, paste the contents of supabase/schema.sql and click Run, then save again.',
+      values: submittedValues(formData),
+    }
+  }
   return {
     message: 'Could not save your changes. Please try again.',
     values: submittedValues(formData),
