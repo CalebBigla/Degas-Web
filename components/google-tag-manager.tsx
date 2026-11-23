@@ -1,7 +1,7 @@
 import Script from 'next/script'
 
 /** Google Tag Manager container. NEXT_PUBLIC_GTM_ID overrides it (e.g. for a test container). */
-export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-NJPP9FHN'
+export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-M9Q3KGMG'
 
 /**
  * Google Tag Manager (official snippet). Loaded after the page becomes
