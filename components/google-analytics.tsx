@@ -1,7 +1,7 @@
 import Script from 'next/script'
 
 /** GA4 Measurement ID (Analytics → Admin → Data streams). NEXT_PUBLIC_GA_ID overrides it. */
-export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-RXN3TX5CZT'
+export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-4Y7KWG48GS'
 
 /**
  * Google Analytics 4 (official gtag.js snippet). Loaded after the page becomes
