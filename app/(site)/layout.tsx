@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { GoogleTagManager } from '@/components/google-tag-manager'
+import { GoogleAnalytics } from '@/components/google-analytics'
 import { getSettings } from '@/lib/content'
 import { getPage } from '@/lib/pages/get'
 import { navLinks } from '@/lib/site-data'
@@ -38,7 +38,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <>
-      <GoogleTagManager />
+      <GoogleAnalytics />
       <SiteHeader companyName={settings.name} links={links} ctaLabel={site['header.cta']} />
       <main id="main">{children}</main>
       <SiteFooter links={links} />
