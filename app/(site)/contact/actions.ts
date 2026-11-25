@@ -1,6 +1,9 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { getPage } from '@/lib/pages/get'
+import { isSupabaseConfigured } from '@/lib/supabase/config'
+import { createSupabasePublicClient } from '@/lib/supabase/server'
 
 export type ContactState = {
   status: 'idle' | 'success' | 'error'
@@ -14,10 +17,10 @@ export async function submitContact(
   _prev: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
-  const name = String(formData.get('name') ?? '').trim()
-  const email = String(formData.get('email') ?? '').trim()
-  const companyName = String(formData.get('company') ?? '').trim()
-  const message = String(formData.get('message') ?? '').trim()
+  const name = String(formData.get('name') ?? '').trim().slice(0, 200)
+  const email = String(formData.get('email') ?? '').trim().slice(0, 320)
+  const companyName = String(formData.get('company') ?? '').trim().slice(0, 200)
+  const message = String(formData.get('message') ?? '').trim().slice(0, 5000)
   // Honeypot field — bots fill this, humans never see it.
   const honeypot = String(formData.get('website') ?? '').trim()
 
@@ -35,46 +38,48 @@ export async function submitContact(
     }
   }
 
-  // Silently accept honeypot submissions so bots think they succeeded.
-  if (honeypot) {
-    return { status: 'success', message: (await getPage('contact'))['form.successMessage'] }
-  }
-
-  const payload = {
-    name,
-    email,
-    company: companyName || null,
-    message,
-    submittedAt: new Date().toISOString(),
-    source: 'degasconcepts.com/contact',
-  }
-
-  const webhookUrl = process.env.CONTACT_WEBHOOK_URL
   const copy = await getPage('contact')
 
-  try {
-    if (webhookUrl) {
+  // Silently accept honeypot submissions so bots think they succeeded.
+  if (honeypot) return { status: 'success', message: copy['form.successMessage'] }
+
+  // 1. Save to the database: it appears under Admin → Enquiries.
+  let saved = false
+  if (isSupabaseConfigured) {
+    const { error } = await createSupabasePublicClient()
+      .from('enquiries')
+      .insert({ name, email, company: companyName || null, message, source: '/contact' })
+    if (error) console.error('[contact] Could not save enquiry:', error.message)
+    else saved = true
+  }
+
+  // 2. Optional extra delivery (e.g. a Zapier/Make webhook that emails you).
+  let forwarded = false
+  const webhookUrl = process.env.CONTACT_WEBHOOK_URL
+  if (webhookUrl) {
+    try {
       const res = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name,
+          email,
+          company: companyName || null,
+          message,
+          submittedAt: new Date().toISOString(),
+          source: '/contact',
+        }),
       })
       if (!res.ok) throw new Error(`Webhook responded with ${res.status}`)
-    } else {
-      // No webhook configured yet — log so the submission is captured in server logs.
-      // Set CONTACT_WEBHOOK_URL (e.g. a Zapier/Make/email webhook) to deliver messages.
-      console.log('[v0] Contact form submission:', payload)
-    }
-
-    return {
-      status: 'success',
-      message: copy['form.successMessage'],
-    }
-  } catch (error) {
-    console.log('[v0] Contact form error:', (error as Error).message)
-    return {
-      status: 'error',
-      message: copy['form.errorMessage'],
+      forwarded = true
+    } catch (error) {
+      console.error('[contact] Webhook failed:', (error as Error).message)
     }
   }
+
+  // Never tell a visitor their message was sent when it went nowhere.
+  if (!saved && !forwarded) return { status: 'error', message: copy['form.errorMessage'] }
+
+  if (saved) revalidatePath('/admin', 'layout')
+  return { status: 'success', message: copy['form.successMessage'] }
 }

@@ -4,7 +4,8 @@ import { PageHero } from '@/components/page-hero'
 import { ContactForm } from '@/components/contact-form'
 import { getSettings } from '@/lib/content'
 import { getPage } from '@/lib/pages/get'
-import { buildMetadata } from '@/lib/seo'
+import { buildMetadata, isFilled } from '@/lib/seo'
+import { SocialLinks, socialProfiles } from '@/components/social-links'
 import { BreadcrumbJsonLd } from '@/components/breadcrumb-json-ld'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -109,6 +110,14 @@ export default async function ContactPage() {
                   </li>
                 ))}
               </ul>
+              {socialProfiles(company).length > 0 && (
+                <div className="mt-6 border-t border-border pt-5">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {copy['direct.socialLabel']}
+                  </p>
+                  <SocialLinks settings={company} tone="light" className="mt-3" />
+                </div>
+              )}
             </div>
 
             <div className="flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent-soft/60 p-6">
@@ -128,6 +137,11 @@ export default async function ContactPage() {
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {copy['location.body']}
                 </p>
+                {isFilled(company.address) && (
+                  <address className="mt-2 whitespace-pre-line text-sm not-italic leading-relaxed text-foreground">
+                    {company.address}
+                  </address>
+                )}
               </div>
             </div>
 

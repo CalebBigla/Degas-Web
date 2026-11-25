@@ -55,10 +55,12 @@ function Sidebar({
   collapsed,
   onNavigate,
   onToggle,
+  badges = {},
 }: {
   collapsed: boolean
   onNavigate?: () => void
   onToggle?: () => void
+  badges?: Record<string, number>
 }) {
   const pathname = usePathname()
 
@@ -121,6 +123,18 @@ function Sidebar({
                         )}
                       />
                       {!collapsed && <span className="truncate">{label}</span>}
+                      {(badges[href] ?? 0) > 0 &&
+                        (collapsed ? (
+                          <span
+                            aria-hidden="true"
+                            className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-accent ring-2 ring-card"
+                          />
+                        ) : (
+                          <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-semibold tabular-nums text-accent-foreground">
+                            {badges[href]! > 99 ? '99+' : badges[href]}
+                            <span className="sr-only"> new</span>
+                          </span>
+                        ))}
                     </Link>
                     {collapsed && (
                       <span
@@ -361,10 +375,13 @@ function TopBar({ email, onOpenMenu }: { email: string; onOpenMenu: () => void }
 export function AdminShell({
   email,
   initialCollapsed,
+  badges,
   children,
 }: {
   email: string
   initialCollapsed: boolean
+  /** Counts shown next to nav items, keyed by href (e.g. unread enquiries). */
+  badges?: Record<string, number>
   children: React.ReactNode
 }) {
   const [collapsed, setCollapsed] = useState(initialCollapsed)
@@ -412,7 +429,7 @@ export function AdminShell({
           collapsed ? 'w-[76px]' : 'w-64',
         )}
       >
-        <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />
+        <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} badges={badges} />
       </aside>
 
       {/* Mobile drawer */}
@@ -432,7 +449,7 @@ export function AdminShell({
               <X className="h-4 w-4" />
             </button>
             <div className="flex-1">
-              <Sidebar collapsed={false} onNavigate={() => setDrawerOpen(false)} />
+              <Sidebar collapsed={false} onNavigate={() => setDrawerOpen(false)} badges={badges} />
             </div>
             <div className="border-t border-border p-4">
               <ThemeToggle />

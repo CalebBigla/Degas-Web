@@ -10,6 +10,9 @@ const MESSAGES: Record<string, { text: string; error?: boolean }> = {
   updated: { text: 'Changes saved and published to the site.' },
   deleted: { text: 'Deleted.' },
   password: { text: 'Password updated.' },
+  archived: { text: 'Enquiry archived.' },
+  unread: { text: 'Marked as unread.' },
+  inbox: { text: 'Moved back to the inbox.' },
   error: { text: 'Something went wrong. Please try again.', error: true },
 }
 

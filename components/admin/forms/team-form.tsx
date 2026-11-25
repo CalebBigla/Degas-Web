@@ -62,6 +62,7 @@ export function TeamForm({ member }: { member?: TeamMember }) {
               name="image_url"
               label="Headshot"
               folder="team"
+              maxWidth={600}
               aspect="square"
               defaultValue={member?.image}
               error={e.image_url}

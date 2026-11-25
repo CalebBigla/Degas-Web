@@ -543,3 +543,33 @@ export async function savePage(slug: string, _prev: FormState, formData: FormDat
   refreshSite()
   redirect(`/admin/pages/${slug}?status=updated`)
 }
+
+// -----------------------------------------------------------------------------
+// Enquiries
+// -----------------------------------------------------------------------------
+
+const ENQUIRY_STATUSES = ['new', 'read', 'archived'] as const
+
+/** Mark an enquiry new (unread), read or archived. */
+export async function setEnquiryStatus(id: string, status: string, returnTo?: string) {
+  if (!ENQUIRY_STATUSES.includes(status as never)) throw new Error('Unknown status')
+  const { supabase } = await requireAdmin()
+  const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+  if (error) console.error('[admin] Could not update enquiry:', error.message)
+  revalidatePath('/admin', 'layout')
+  if (returnTo?.startsWith('/admin/enquiries')) {
+    const result = error ? 'error' : status === 'archived' ? 'archived' : status === 'new' ? 'unread' : 'inbox'
+    redirect(`${returnTo}${returnTo.includes('?') ? '&' : '?'}status=${result}`)
+  }
+}
+
+export async function deleteEnquiry(id: string) {
+  const { supabase } = await requireAdmin()
+  const { error } = await supabase.from('enquiries').delete().eq('id', id)
+  if (error) {
+    console.error('[admin] Could not delete enquiry:', error.message)
+    redirect('/admin/enquiries?status=error')
+  }
+  revalidatePath('/admin', 'layout')
+  redirect('/admin/enquiries?status=deleted')
+}

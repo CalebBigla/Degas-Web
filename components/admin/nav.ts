@@ -2,6 +2,7 @@ import {
   Building2,
   FileText,
   FolderKanban,
+  Inbox,
   Gem,
   Layers,
   LayoutDashboard,
@@ -17,7 +18,10 @@ export type NavItem = { label: string; href: string; icon: LucideIcon; newHref?:
 export const NAV: { heading: string | null; items: NavItem[] }[] = [
   {
     heading: null,
-    items: [{ label: 'Overview', href: '/admin', icon: LayoutDashboard }],
+    items: [
+      { label: 'Overview', href: '/admin', icon: LayoutDashboard },
+      { label: 'Enquiries', href: '/admin/enquiries', icon: Inbox },
+    ],
   },
   {
     heading: 'Content',

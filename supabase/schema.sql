@@ -172,6 +172,21 @@ alter table public.projects add column if not exists cover_alt text;
 alter table public.projects add column if not exists results text;
 alter table public.projects add column if not exists service_ids uuid[] not null default '{}';
 
+-- Enquiries sent from the contact form. Visitors can only add rows (see the
+-- policies below); only admins can read, update or delete them.
+create table if not exists public.enquiries (
+  id uuid primary key default gen_random_uuid(),
+  name text not null check (char_length(name) between 2 and 200),
+  email text not null check (char_length(email) between 3 and 320),
+  company text check (company is null or char_length(company) <= 200),
+  message text not null check (char_length(message) between 10 and 5000),
+  status text not null default 'new' check (status in ('new', 'read', 'archived')),
+  source text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists enquiries_created_at_idx on public.enquiries (created_at desc);
+
 -- Page copy: one row per public page (home, about, ..., site). `content` holds
 -- the edited text keyed by field; anything missing falls back to the defaults
 -- in lib/pages/definitions.ts.
@@ -185,7 +200,7 @@ create table if not exists public.pages (
 do $$
 declare t text;
 begin
-  foreach t in array array['site_settings', 'pages', 'services', 'core_values', 'projects', 'clients', 'team_members', 'posts']
+  foreach t in array array['site_settings', 'pages', 'services', 'core_values', 'projects', 'clients', 'team_members', 'posts', 'enquiries']
   loop
     execute format('drop trigger if exists set_updated_at on public.%I', t);
     execute format(
@@ -238,6 +253,21 @@ begin
   end loop;
 end;
 $$;
+
+-- Enquiries: anyone may submit one (new, unread only); admins manage them.
+alter table public.enquiries enable row level security;
+drop policy if exists "Anyone can submit" on public.enquiries;
+create policy "Anyone can submit" on public.enquiries
+  for insert to anon, authenticated with check (status = 'new');
+drop policy if exists "Admin read" on public.enquiries;
+create policy "Admin read" on public.enquiries
+  for select to authenticated using (public.is_admin());
+drop policy if exists "Admin update" on public.enquiries;
+create policy "Admin update" on public.enquiries
+  for update to authenticated using (public.is_admin()) with check (public.is_admin());
+drop policy if exists "Admin delete" on public.enquiries;
+create policy "Admin delete" on public.enquiries
+  for delete to authenticated using (public.is_admin());
 
 -- -----------------------------------------------------------------------------
 -- Image storage: public "media" bucket, admins upload/replace/delete.

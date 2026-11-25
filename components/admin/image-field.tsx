@@ -6,9 +6,13 @@ import { getSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { MEDIA_BUCKET } from '@/lib/supabase/config'
 import { cn } from '@/lib/utils'
 import { trimImage } from '@/lib/admin/trim-image'
+import { compressImage } from '@/lib/admin/compress-image'
 import { buttonClass } from '@/components/admin/ui'
 
+/** Storage limit per file (after compressing). */
 const MAX_BYTES = 5 * 1024 * 1024
+/** Largest original accepted; big phone photos are shrunk before upload. */
+const MAX_SOURCE_BYTES = 20 * 1024 * 1024
 const ACCEPTED = ['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml']
 
 /**
@@ -26,6 +30,7 @@ export function ImageField({
   aspect = 'video',
   contain,
   trim,
+  maxWidth = 2000,
 }: {
   name: string
   label: string
@@ -39,6 +44,8 @@ export function ImageField({
   contain?: boolean
   /** Crop empty borders before uploading (logos). */
   trim?: boolean
+  /** Wider images are scaled down to this before upload (px). */
+  maxWidth?: number
 }) {
   const inputId = useId()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -53,14 +60,20 @@ export function ImageField({
       setUploadError('Use a PNG, JPG, WebP, AVIF or SVG image.')
       return
     }
-    if (file.size > MAX_BYTES) {
-      setUploadError('Images must be 5 MB or smaller.')
+    if (file.size > MAX_SOURCE_BYTES) {
+      setUploadError('Images must be 20 MB or smaller.')
       return
     }
 
     setUploading(true)
     try {
       if (trim) file = await trimImage(file)
+      // Resize and compress in the browser: the site serves images as uploaded.
+      file = await compressImage(file, maxWidth)
+      if (file.size > MAX_BYTES) {
+        setUploadError('This image is still over 5 MB after compressing. Try a smaller one.')
+        return
+      }
       const extension = file.name.split('.').pop()?.toLowerCase() || 'png'
       const path = `${folder}/${crypto.randomUUID()}.${extension}`
       const supabase = getSupabaseBrowserClient()

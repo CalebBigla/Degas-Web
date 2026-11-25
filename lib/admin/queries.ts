@@ -89,3 +89,66 @@ export async function adminPage(slug: string) {
     updatedAt: (data?.updated_at as string | undefined) ?? null,
   }
 }
+
+// -----------------------------------------------------------------------------
+// Enquiries (contact form)
+// -----------------------------------------------------------------------------
+
+export type EnquiryStatus = 'new' | 'read' | 'archived'
+
+export type Enquiry = {
+  id: string
+  name: string
+  email: string
+  company: string | null
+  message: string
+  status: EnquiryStatus
+  source: string | null
+  createdAt: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapEnquiry = (row: Record<string, any>): Enquiry => ({
+  id: row.id,
+  name: row.name,
+  email: row.email,
+  company: row.company ?? null,
+  message: row.message,
+  status: row.status,
+  source: row.source ?? null,
+  createdAt: row.created_at,
+})
+
+/** True when the error means the enquiries table hasn't been created yet. */
+const missingTable = (error: { code?: string } | null) =>
+  error?.code === 'PGRST205' || error?.code === '42P01'
+
+/** Inbox (new + read) or archive, newest first. `null` when the table doesn't exist yet. */
+export async function adminEnquiries(view: 'inbox' | 'archived'): Promise<Enquiry[] | null> {
+  const { supabase } = await requireAdmin()
+  let query = supabase.from('enquiries').select('*').order('created_at', { ascending: false }).limit(500)
+  query = view === 'archived' ? query.eq('status', 'archived') : query.neq('status', 'archived')
+  const { data, error } = await query
+  if (missingTable(error)) return null
+  if (error) throw new Error(`Could not load enquiries: ${error.message}`)
+  return (data ?? []).map(mapEnquiry)
+}
+
+export async function adminEnquiry(id: string): Promise<Enquiry> {
+  const { supabase } = await requireAdmin()
+  if (!/^[0-9a-f-]{36}$/i.test(id)) notFound()
+  const { data, error } = await supabase.from('enquiries').select('*').eq('id', id).maybeSingle()
+  if (error) throw new Error(`Could not load enquiry: ${error.message}`)
+  if (!data) notFound()
+  return mapEnquiry(data)
+}
+
+/** Unread enquiries, for the sidebar badge. 0 if the table doesn't exist yet. */
+export async function unreadEnquiryCount(): Promise<number> {
+  const { supabase } = await requireAdmin()
+  const { count, error } = await supabase
+    .from('enquiries')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'new')
+  return error ? 0 : (count ?? 0)
+}

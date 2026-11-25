@@ -281,6 +281,7 @@ const contact = {
   'direct.whatsappLabel': 'Phone / WhatsApp',
   'direct.emailLabel': 'Email',
   'direct.callLabel': 'Call us',
+  'direct.socialLabel': 'Follow us',
   'trust.title': 'CAC Registered Company',
   'trust.body':
     "{company} is a registered Nigerian company. You're working with a legitimate, accountable team.",
@@ -805,6 +806,10 @@ export const pageDefinitions: { [S in PageSlug]: PageDef<Key<S>> } = {
           t('direct.whatsappLabel', 'WhatsApp label', { max: 40 }),
           t('direct.emailLabel', 'Email label', { max: 40 }),
           t('direct.callLabel', 'Phone label', { max: 40 }),
+          t('direct.socialLabel', 'Social links label', {
+            max: 40,
+            help: 'Shown above your social profile icons (set the links in Company info).',
+          }),
         ],
       },
       {

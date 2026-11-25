@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { cookies } from 'next/headers'
 import { requireAdmin } from '@/lib/admin/auth'
+import { unreadEnquiryCount } from '@/lib/admin/queries'
 import { SIDEBAR_COOKIE } from '@/lib/admin/preferences'
 import { isSupabaseConfigured } from '@/lib/supabase/config'
 import { AdminShell } from '@/components/admin/admin-shell'
@@ -9,12 +10,13 @@ import { StatusToast } from '@/components/admin/status-toast'
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
   if (!isSupabaseConfigured) return <SetupRequired />
-  const [{ user }, cookieStore] = await Promise.all([requireAdmin(), cookies()])
+  const [{ user }, cookieStore, unread] = await Promise.all([requireAdmin(), cookies(), unreadEnquiryCount()])
 
   return (
     <AdminShell
       email={user.email ?? 'Admin'}
       initialCollapsed={cookieStore.get(SIDEBAR_COOKIE)?.value === 'collapsed'}
+      badges={{ '/admin/enquiries': unread }}
     >
       {children}
       <Suspense fallback={null}>

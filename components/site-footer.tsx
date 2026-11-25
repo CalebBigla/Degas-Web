@@ -1,6 +1,8 @@
 import Link from 'next/link'
-import { Mail, Phone, ExternalLink, ShieldCheck } from 'lucide-react'
+import { Mail, Phone, ExternalLink, ShieldCheck, MapPin } from 'lucide-react'
 import type { NavLink } from '@/lib/site-data'
+import { SocialLinks } from '@/components/social-links'
+import { isFilled } from '@/lib/seo'
 import { getSettings } from '@/lib/content'
 import { getPage } from '@/lib/pages/get'
 import { Logo } from '@/components/logo'
@@ -25,6 +27,7 @@ export async function SiteFooter({ links }: { links: NavLink[] }) {
               <ShieldCheck className="h-3.5 w-3.5 text-accent" />
               {site['footer.badge']}
             </div>
+            <SocialLinks settings={company} className="mt-6" />
           </div>
 
           <div className="md:col-span-3">
@@ -75,6 +78,12 @@ export async function SiteFooter({ links }: { links: NavLink[] }) {
                   {site['footer.linkedinLabel']}
                 </a>
               </li>
+              {isFilled(company.address) && (
+                <li className="flex items-start gap-2.5">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                  <address className="whitespace-pre-line not-italic">{company.address}</address>
+                </li>
+              )}
             </ul>
           </div>
         </div>

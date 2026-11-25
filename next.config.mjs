@@ -8,8 +8,12 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   images: {
+    // Serve images as they are, without the host's resizing service: Vercel's
+    // free plan has a monthly image-optimization quota, and once it runs out
+    // every new image fails with "402 Payment Required". Uploads are resized
+    // and compressed in the admin before upload instead (lib/admin/compress-image.ts).
+    unoptimized: true,
     // Images uploaded through the admin live in Supabase Storage (public bucket).
-    // Matched by pattern, so it works regardless of when env vars are loaded.
     remotePatterns: [
       { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
     ],
